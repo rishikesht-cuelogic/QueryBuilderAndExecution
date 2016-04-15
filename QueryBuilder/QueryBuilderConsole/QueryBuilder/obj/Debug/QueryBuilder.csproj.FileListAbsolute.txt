@@ -20,3 +20,14 @@ D:\Projects\QueryBuilder\QueryBuilderConsole\QueryBuilder\bin\Debug\Microsoft.Sq
 D:\Projects\QueryBuilder\QueryBuilderConsole\QueryBuilder\obj\Debug\QueryBuilder.csprojResolveAssemblyReference.cache
 D:\Projects\QueryBuilder\QueryBuilderConsole\QueryBuilder\obj\Debug\QueryBuilder.dll
 D:\Projects\QueryBuilder\QueryBuilderConsole\QueryBuilder\obj\Debug\QueryBuilder.pdb
+D:\Projects\QueryBuilderAndExecution\QueryBuilder\QueryBuilderConsole\QueryBuilder\obj\Debug\QueryBuilder.csprojResolveAssemblyReference.cache
+D:\Projects\QueryBuilderAndExecution\QueryBuilder\QueryBuilderConsole\QueryBuilder\obj\Debug\QueryBuilder.dll
+D:\Projects\QueryBuilderAndExecution\QueryBuilder\QueryBuilderConsole\QueryBuilder\obj\Debug\QueryBuilder.pdb
+D:\Projects\QueryBuilderAndExecution\QueryBuilder\QueryBuilderConsole\QueryBuilder\bin\Debug\QueryBuilder.dll
+D:\Projects\QueryBuilderAndExecution\QueryBuilder\QueryBuilderConsole\QueryBuilder\bin\Debug\QueryBuilder.pdb
+D:\Projects\QueryBuilderAndExecution\QueryBuilder\QueryBuilderConsole\QueryBuilder\bin\Debug\Microsoft.SqlServer.ConnectionInfo.dll
+D:\Projects\QueryBuilderAndExecution\QueryBuilder\QueryBuilderConsole\QueryBuilder\bin\Debug\Microsoft.SqlServer.Smo.dll
+D:\Projects\QueryBuilderAndExecution\QueryBuilder\QueryBuilderConsole\QueryBuilder\bin\Debug\Microsoft.SqlServer.Management.Sdk.Sfc.dll
+D:\Projects\QueryBuilderAndExecution\QueryBuilder\QueryBuilderConsole\QueryBuilder\bin\Debug\Microsoft.SqlServer.SqlEnum.dll
+D:\Projects\QueryBuilderAndExecution\QueryBuilder\QueryBuilderConsole\QueryBuilder\bin\Debug\Microsoft.SqlServer.Dmf.dll
+D:\Projects\QueryBuilderAndExecution\QueryBuilder\QueryBuilderConsole\QueryBuilder\bin\Debug\Microsoft.SqlServer.ServiceBrokerEnum.dll
