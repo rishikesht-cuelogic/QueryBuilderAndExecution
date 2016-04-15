@@ -4,17 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{DD58A563-F9FB-492F-98A8-D6850DB88AC1}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{0376DAEF-D70B-4A6D-91FB-B3547DAA9A4C}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>QueryBuilderConsole</RootNamespace>
-    <AssemblyName>QueryBuilderConsole</AssemblyName>
+    <RootNamespace>PortableDataAccessLayer</RootNamespace>
+    <AssemblyName>PortableDataAccessLayer</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -33,7 +30,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Projects\surescore-admin\SureScoreWebApp\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -43,21 +45,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="Classes\AssemblyProvider.cs" />
+    <Compile Include="Classes\CommandBuilder.cs" />
+    <Compile Include="Classes\Configuration.cs" />
+    <Compile Include="Classes\Connection.cs" />
+    <Compile Include="Classes\ConnectionManager.cs" />
+    <Compile Include="Classes\DataAdapterManager.cs" />
+    <Compile Include="Classes\DBHelper.cs" />
+    <Compile Include="Classes\DBParamBuilder.cs" />
+    <Compile Include="Classes\DBParameter.cs" />
+    <Compile Include="Classes\DBParameterCollection.cs" />
+    <Compile Include="Classes\ProcReturnType.cs" />
+    <Compile Include="Classes\Utility.cs" />
+    <Compile Include="DataAccessLayer.cs" />
+    <Compile Include="IDataAccess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\PortableDataAccessLayer\PortableDataAccessLayer.csproj">
-      <Project>{0376daef-d70b-4a6d-91fb-b3547daa9a4c}</Project>
-      <Name>PortableDataAccessLayer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\QueryBuilder\QueryBuilder.csproj">
-      <Project>{7213ad5d-ad37-4953-8082-8b411fedb57b}</Project>
-      <Name>QueryBuilder</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
