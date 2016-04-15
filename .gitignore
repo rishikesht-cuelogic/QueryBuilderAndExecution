@@ -1,0 +1,21 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/QueryBuilder/QueryBuilderConsole/QueryBuilderConsole/bin/Debug/PortableDataAccessLayer.pdb
+/QueryBuilder/QueryBuilderConsole/QueryBuilderConsole/bin/Debug/PortableDataAccessLayer.dll
+/QueryBuilder/QueryBuilderConsole/QueryBuilderConsole/bin/Debug/Newtonsoft.Json.xml
+/QueryBuilder/QueryBuilderConsole/QueryBuilderConsole/bin/Debug/Newtonsoft.Json.dll
+/QueryBuilder/QueryBuilderConsole/PortableDataAccessLayer/obj/Debug/TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs
+/QueryBuilder/QueryBuilderConsole/PortableDataAccessLayer/obj/Debug/TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs
+/QueryBuilder/QueryBuilderConsole/PortableDataAccessLayer/obj/Debug/TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs
+/QueryBuilder/QueryBuilderConsole/PortableDataAccessLayer/obj/Debug/PortableDataAccessLayer.pdb
+/QueryBuilder/QueryBuilderConsole/PortableDataAccessLayer/obj/Debug/PortableDataAccessLayer.dll
+/QueryBuilder/QueryBuilderConsole/PortableDataAccessLayer/obj/Debug/PortableDataAccessLayer.csprojResolveAssemblyReference.cache
+/QueryBuilder/QueryBuilderConsole/PortableDataAccessLayer/obj/Debug/PortableDataAccessLayer.csproj.FileListAbsolute.txt
+/QueryBuilder/QueryBuilderConsole/PortableDataAccessLayer/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
+/QueryBuilder/QueryBuilderConsole/PortableDataAccessLayer/bin/Debug/PortableDataAccessLayer.pdb
+/QueryBuilder/QueryBuilderConsole/PortableDataAccessLayer/bin/Debug/PortableDataAccessLayer.dll.config
+/QueryBuilder/QueryBuilderConsole/PortableDataAccessLayer/bin/Debug/PortableDataAccessLayer.dll
+/QueryBuilder/QueryBuilderConsole/PortableDataAccessLayer/bin/Debug/Newtonsoft.Json.xml
+/QueryBuilder/QueryBuilderConsole/PortableDataAccessLayer/bin/Debug/Newtonsoft.Json.dll

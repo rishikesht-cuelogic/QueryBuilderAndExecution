@@ -16,6 +16,9 @@ namespace QueryBuilder
         private string m_FieldName;
         private Comparison m_ComparisonOperator;
         private object m_Value;
+        /// <summary>
+        /// SubCluase used for logical operator i.e. AND or OR. It create multiple filters
+        /// </summary>
         internal struct SubClause
         {
             public LogicOperator LogicOperator;

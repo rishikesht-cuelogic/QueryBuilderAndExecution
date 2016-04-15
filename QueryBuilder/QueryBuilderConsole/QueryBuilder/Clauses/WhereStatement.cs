@@ -40,7 +40,7 @@ namespace QueryBuilder
             WhereClause NewWhereClause = new WhereClause(field, @operator, compareValue);
             this.AddWhereClauseToLevel(NewWhereClause, level);
             return NewWhereClause;
-        }
+        }   
 
         private void AddWhereClause(WhereClause clause)
         {
