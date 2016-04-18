@@ -11,6 +11,11 @@ using System.Threading.Tasks;
 
 namespace QueryBuilderConsole
 {
+    public enum Columns
+    {
+        Name,
+        Id
+    }
     class Program
     {
         static void Main(string[] args)
@@ -44,7 +49,8 @@ namespace QueryBuilderConsole
 
             var query2 = new SelectQueryBuilder();
             query2.SelectFromTable("City");
-            query2.SelectCount();
+            TopClause topClause = new TopClause(100, TopUnit.Percent);
+            query2.TopClause = topClause;
             var text = query2.BuildQuery();
 
             Console.WriteLine(query.BuildQuery());

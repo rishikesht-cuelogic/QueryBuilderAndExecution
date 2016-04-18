@@ -191,25 +191,49 @@ namespace QueryBuilder
         /// <param name="compareValue">It is filter value</param>
         /// <returns></returns>
         public WhereClause AddWhere(string field, Comparison @operator, object compareValue) { return AddWhere(field, @operator, compareValue, 1); }
-        public WhereClause AddWhere(Enum field, Comparison @operator, object compareValue) { return AddWhere(field.ToString(), @operator, compareValue, 1); }
+        //public WhereClause AddWhere(Enum field, Comparison @operator, object compareValue) { return AddWhere(field.ToString(), @operator, compareValue, 1); }
+        /// <summary>
+        /// It adds where condition
+        /// </summary>
+        /// <param name="field">It is column name which you want to filter</param>
+        /// <param name="operator">It is comparison operator</param>
+        /// <param name="compareValue">It is filter value</param>
+        /// <param name="level">It is level of where clause</param>
+        /// <returns></returns>
         public WhereClause AddWhere(string field, Comparison @operator, object compareValue, int level)
         {
             WhereClause NewWhereClause = new WhereClause(field, @operator, compareValue);
             _whereStatement.Add(NewWhereClause, level);
             return NewWhereClause;
         }
-
+        /// <summary>
+        /// It is used to sort the data
+        /// </summary>
+        /// <param name="clause">Clause have field on which you want to sort it and sort type. i.e. Ascending or Descending. Default is Ascending sort</param>
         public void AddOrderBy(OrderByClause clause)
         {
             _orderByStatement.Add(clause);
         }
-        public void AddOrderBy(Enum field, Sorting order) { this.AddOrderBy(field.ToString(), order); }
-        public void AddOrderBy(string field, Sorting order)
+        /// <summary>
+        /// It is used to sort the data
+        /// </summary>
+        /// <param name="field">It is a column name of type enum on which you want to sort it</param>
+        /// <param name="order">It is type of sort i.e. Ascending or Descending. Default is Ascending sort</param>
+        public void AddOrderBy(Enum field, Sorting order=Sorting.Ascending) { this.AddOrderBy(field.ToString(), order); }
+        /// <summary>
+        /// It is used to sort the data
+        /// </summary>
+        /// <param name="field">It is column name on which you want to sort data</param>
+        /// <param name="order">It is type of sort i.e. Ascending or Descending. Default is Ascending sort</param>
+        public void AddOrderBy(string field, Sorting order=Sorting.Ascending)
         {
             OrderByClause NewOrderByClause = new OrderByClause(field, order);
             _orderByStatement.Add(NewOrderByClause);
         }
-
+        /// <summary>
+        /// It is used to Group by clause
+        /// </summary>
+        /// <param name="columns">It is array of column names by which you want to group it</param>
         public void GroupBy(params string[] columns)
         {
             foreach (string Column in columns)
@@ -217,27 +241,62 @@ namespace QueryBuilder
                 _groupByColumns.Add(Column);
             }
         }
-
+        /// <summary>
+        /// It is property of Having by clause
+        /// </summary>
         public WhereStatement Having
         {
             get { return _havingStatement; }
             set { _havingStatement = value; }
         }
-
+        /// <summary>
+        /// It is used to having by clause which is used in Group By clause
+        /// </summary>
+        /// <param name="clause">It is having clause which is similar to where clause. Default level is 1. </param>
         public void AddHaving(WhereClause clause) { AddHaving(clause, 1); }
+        /// <summary>
+        /// It is used to having by clause which is used in Group By clause
+        /// </summary>
+        /// <param name="clause">It is having clause which is similar to where clause.</param>
+        /// <param name="level">It is having by level </param>
         public void AddHaving(WhereClause clause, int level)
         {
             _havingStatement.Add(clause, level);
         }
+        /// <summary>
+        /// It is used to having by clause which is used in Group By clause
+        /// </summary>
+        /// <param name="field">It is a column name on which you want to filter group</param>
+        /// <param name="operator">It is comparison operator</param>
+        /// <param name="compareValue">It is value used for filter the group</param>
+        /// <returns>It returns WhereClause which is same as Having clause</returns>
         public WhereClause AddHaving(string field, Comparison @operator, object compareValue) { return AddHaving(field, @operator, compareValue, 1); }
+        /// <summary>
+        /// It is used to having by clause which is used in Group By clause
+        /// </summary>
+        /// <param name="field">It is a column name of type enum on which you want to filter group</param>
+        /// <param name="operator">It is comparison operator</param>
+        /// <param name="compareValue">It is value used for filter the group</param>
+        /// <returns>It returns WhereClause which is same as Having clause</returns>
         public WhereClause AddHaving(Enum field, Comparison @operator, object compareValue) { return AddHaving(field.ToString(), @operator, compareValue, 1); }
+        /// <summary>
+        /// It is used to having by clause which is used in Group By clause
+        /// </summary>
+        /// <param name="field">It is a column name of type enum on which you want to filter group</param>
+        /// <param name="operator">It is comparison operator</param>
+        /// <param name="compareValue">It is value used for filter the group</param>
+        /// <param name="level">It is level of having by clause</param>
+        /// <returns>It returns WhereClause which is same as Having clause</returns>
         public WhereClause AddHaving(string field, Comparison @operator, object compareValue, int level)
         {
             WhereClause NewWhereClause = new WhereClause(field, @operator, compareValue);
             _havingStatement.Add(NewWhereClause, level);
             return NewWhereClause;
         }
-
+        /// <summary>
+        /// It builds the query and returns string
+        /// </summary>
+        /// <returns></returns>
         public string BuildQuery()
         {
             return (string)this.GetQuery();
@@ -257,7 +316,7 @@ namespace QueryBuilder
                 Query += "DISTINCT ";
             }
 
-            // Output Top clause
+            // Output Top clause; Skip If it is 100 percent;
             if (!(_topClause.Quantity == 100 & _topClause.Unit == TopUnit.Percent))
             {
                 Query += "TOP " + _topClause.Quantity;
