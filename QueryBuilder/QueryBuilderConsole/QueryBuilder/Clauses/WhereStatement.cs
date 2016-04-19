@@ -40,7 +40,7 @@ namespace QueryBuilder
             WhereClause NewWhereClause = new WhereClause(field, @operator, compareValue);
             this.AddWhereClauseToLevel(NewWhereClause, level);
             return NewWhereClause;
-        }   
+        }
 
         private void AddWhereClause(WhereClause clause)
         {
@@ -64,7 +64,7 @@ namespace QueryBuilder
         {
             string Result = "";
             foreach (List<WhereClause> WhereStatement in this) // Loop through all statement levels, OR them together
-            {
+                {
                 string LevelWhere = "";
                 foreach (WhereClause Clause in WhereStatement) // Loop through all conditions, AND them together
                 {
@@ -89,7 +89,10 @@ namespace QueryBuilder
                     }
                     else
                     {
-                        WhereClause = CreateComparisonClause(Clause.FieldName, Clause.ComparisonOperator, Clause.Value);
+                        if (Clause.SelectQueryBuilder != null)
+                            WhereClause = CreateComparisonClause(Clause.FieldName, Clause.ComparisonOperator, Clause.SelectQueryBuilder);
+                        else
+                            WhereClause = CreateComparisonClause(Clause.FieldName, Clause.ComparisonOperator, Clause.Value);
                     }
 
                     foreach (WhereClause.SubClause SubWhereClause in Clause.SubClauses)	// Loop through all subclauses, append them together with the specified logic operator
@@ -121,10 +124,16 @@ namespace QueryBuilder
                         }
                         else
                         {
-                            WhereClause += CreateComparisonClause(Clause.FieldName, SubWhereClause.ComparisonOperator, SubWhereClause.Value);
+                            if (Clause.SelectQueryBuilder != null)
+                                WhereClause = CreateComparisonClause(Clause.FieldName, Clause.ComparisonOperator, Clause.SelectQueryBuilder);
+                            else
+                                WhereClause += CreateComparisonClause(Clause.FieldName, SubWhereClause.ComparisonOperator, SubWhereClause.Value);
                         }
                     }
-                    LevelWhere += "(" + WhereClause + ") AND ";
+                    if (Clause.SelectQueryBuilder != null)
+                        LevelWhere += WhereClause + " AND ";
+                    else
+                        LevelWhere += "(" + WhereClause + ") AND ";
                 }
                 LevelWhere = LevelWhere.Substring(0, LevelWhere.Length - 5); // Trim de last AND inserted by foreach loop
                 if (WhereStatement.Count > 1)
@@ -167,6 +176,54 @@ namespace QueryBuilder
                         Output = "NOT " + fieldName + " LIKE " + FormatSQLValue(value); break;
                     case Comparison.In:
                         Output = fieldName + " IN (" + FormatSQLValue(value) + ")"; break;
+                }
+            }
+            else // value==null	|| value==DBNull.Value
+            {
+                if ((comparisonOperator != Comparison.Equals) && (comparisonOperator != Comparison.NotEquals))
+                {
+                    throw new Exception("Cannot use comparison operator " + comparisonOperator.ToString() + " for NULL values.");
+                }
+                else
+                {
+                    switch (comparisonOperator)
+                    {
+                        case Comparison.Equals:
+                            Output = fieldName + " IS NULL"; break;
+                        case Comparison.NotEquals:
+                            Output = "NOT " + fieldName + " IS NULL"; break;
+                    }
+                }
+            }
+            return Output;
+        }
+
+        internal static string CreateComparisonClause(string fieldName, Comparison comparisonOperator, SelectQueryBuilder selectQueryBuilder)
+        {
+            string Output = "";
+            if (selectQueryBuilder != null)
+            {
+                var selectQuery = selectQueryBuilder.BuildQuery();
+                switch (comparisonOperator)
+                {
+                    case Comparison.Equals:
+                        Output = fieldName + " = " + selectQuery; break;
+                    case Comparison.NotEquals:
+                        Output = fieldName + " <> " + selectQuery; break;
+                    case Comparison.GreaterThan:
+                        Output = fieldName + " > " + selectQuery; break;
+                    case Comparison.GreaterOrEquals:
+                        Output = fieldName + " >= " + selectQuery; break;
+                    case Comparison.LessThan:
+                        Output = fieldName + " < " + selectQuery; break;
+                    case Comparison.LessOrEquals:
+                        Output = fieldName + " <= " + selectQuery; break;
+                    case Comparison.Like:
+                        Output = fieldName + " LIKE " + selectQuery; break;
+                    case Comparison.NotLike:
+                        Output = "NOT " + fieldName + " LIKE " + selectQuery; break;
+                    case Comparison.In:
+                        Output = fieldName + " IN (" + selectQuery + ")"; break;
                 }
             }
             else // value==null	|| value==DBNull.Value

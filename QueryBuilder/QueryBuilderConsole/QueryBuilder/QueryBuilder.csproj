@@ -42,11 +42,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseInsertUpdateQueryBuilder.cs" />
     <Compile Include="Clauses\JoinClause.cs" />
     <Compile Include="Clauses\OrderByClause.cs" />
     <Compile Include="Clauses\TopClause.cs" />
     <Compile Include="Clauses\WhereClause.cs" />
     <Compile Include="Clauses\WhereStatement.cs" />
+    <Compile Include="InsertQueryBuilder.cs" />
     <Compile Include="DeleteQueryBuilder.cs" />
     <Compile Include="Enum\Comparison.cs" />
     <Compile Include="Enum\JoinType.cs" />
@@ -61,6 +63,7 @@
     <Compile Include="SelectQueryBuilder.cs" />
     <Compile Include="SqlLiteral.cs" />
     <Compile Include="MSSQLRelationship.cs" />
+    <Compile Include="Utility.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

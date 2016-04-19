@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QueryBuilder", "QueryBuilde
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortableDataAccessLayer", "PortableDataAccessLayer\PortableDataAccessLayer.csproj", "{0376DAEF-D70B-4A6D-91FB-B3547DAA9A4C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{C1AC8DF1-5321-4293-90CE-288C163423AA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.QueryBuilder", "Test.QueryBuilder\Test.QueryBuilder.csproj", "{21B0E6F4-44B0-438A-B56D-F6731DA6C273}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,8 +31,15 @@ Global
 		{0376DAEF-D70B-4A6D-91FB-B3547DAA9A4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0376DAEF-D70B-4A6D-91FB-B3547DAA9A4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0376DAEF-D70B-4A6D-91FB-B3547DAA9A4C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21B0E6F4-44B0-438A-B56D-F6731DA6C273}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21B0E6F4-44B0-438A-B56D-F6731DA6C273}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21B0E6F4-44B0-438A-B56D-F6731DA6C273}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21B0E6F4-44B0-438A-B56D-F6731DA6C273}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{21B0E6F4-44B0-438A-B56D-F6731DA6C273} = {C1AC8DF1-5321-4293-90CE-288C163423AA}
 	EndGlobalSection
 EndGlobal

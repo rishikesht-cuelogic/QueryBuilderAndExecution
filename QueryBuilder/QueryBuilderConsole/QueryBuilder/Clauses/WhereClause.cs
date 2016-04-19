@@ -16,6 +16,7 @@ namespace QueryBuilder
         private string m_FieldName;
         private Comparison m_ComparisonOperator;
         private object m_Value;
+        private SelectQueryBuilder m_SelectQueryBuilder;
         /// <summary>
         /// SubCluase used for logical operator i.e. AND or OR. It create multiple filters
         /// </summary>
@@ -60,12 +61,27 @@ namespace QueryBuilder
             set { m_Value = value; }
         }
 
+        public SelectQueryBuilder SelectQueryBuilder
+        {
+            get { return m_SelectQueryBuilder; }
+            set { m_SelectQueryBuilder = value; }
+        }
+
+        public WhereClause(string field, Comparison firstCompareOperator, SelectQueryBuilder selectQueryBuilder)
+        {
+            m_FieldName = field;
+            m_ComparisonOperator = firstCompareOperator;
+            SubClauses = new List<SubClause>();
+            m_Value = null;
+            m_SelectQueryBuilder = selectQueryBuilder;
+        }
         public WhereClause(string field, Comparison firstCompareOperator, object firstCompareValue)
         {
             m_FieldName = field;
             m_ComparisonOperator = firstCompareOperator;
             m_Value = firstCompareValue;
             SubClauses = new List<SubClause>();
+            m_SelectQueryBuilder = null;
         }
         public void AddClause(LogicOperator logic, Comparison compareOperator, object compareValue)
         {
