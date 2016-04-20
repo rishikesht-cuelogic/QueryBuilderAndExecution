@@ -38,13 +38,17 @@ namespace QueryBuilder
         {
             this.dbRelationship = dbRelationship;
         }
-
+        /// <summary>
+        /// Get or Set Distinct
+        /// </summary>
         public bool Distinct
         {
             get { return distinct; }
             set { distinct = value; }
         }
-
+        /// <summary>
+        /// Get or Set TopRecords
+        /// </summary>
         public int TopRecords
         {
             get { return topClause.Quantity; }
@@ -54,6 +58,9 @@ namespace QueryBuilder
                 topClause.Unit = TopUnit.Records;
             }
         }
+        /// <summary>
+        /// Get or Set Top Cluase
+        /// </summary>
         public TopClause TopClause
         {
             get { return topClause; }
@@ -172,35 +179,54 @@ namespace QueryBuilder
             joins.Add(NewJoin);
         }
         /// <summary>
-        /// Property of WhereStatement. 
+        /// Get or Set WhereStatement
         /// </summary>
         public WhereStatement Where
         {
             get { return whereStatement; }
             set { whereStatement = value; }
         }
-
-        public void AddWhere(WhereClause clause) { AddWhere(clause, 1); }
+        /// <summary>
+        /// It adds where condition
+        /// </summary>
+        /// <param name="clause">It is object where clause</param>
+        public void AddWhere(WhereClause clause) {
+            AddWhere(clause, 1);
+        }
+        /// <summary>
+        /// It adds where condition
+        /// </summary>
+        /// <param name="clause">It is object of where clause</param>
+        /// <param name="level">It is level. It applies AND operation for all where clause in same level and applies OR operation for different level </param>
         public void AddWhere(WhereClause clause, int level)
         {
             whereStatement.Add(clause, level);
         }
         /// <summary>
-        /// It add where condition.
+        /// It adds where condition.
         /// </summary>
         /// <param name="field">It is column name which you want to filter</param>
         /// <param name="operator">It is comparison operator</param>
         /// <param name="compareValue">It is filter value</param>
         /// <returns></returns>
         public WhereClause AddWhere(string field, Comparison @operator, object compareValue) { return AddWhere(field, @operator, compareValue, 1); }
-        //public WhereClause AddWhere(Enum field, Comparison @operator, object compareValue) { return AddWhere(field.ToString(), @operator, compareValue, 1); }
         /// <summary>
         /// It adds where condition
         /// </summary>
         /// <param name="field">It is column name which you want to filter</param>
         /// <param name="operator">It is comparison operator</param>
         /// <param name="compareValue">It is filter value</param>
-        /// <param name="level">It is level of where clause</param>
+        /// <returns></returns>
+        public WhereClause AddWhere(Enum field, Comparison @operator, object compareValue) {
+            return AddWhere(field.ToString(), @operator, compareValue, 1);
+        }
+        /// <summary>
+        /// It adds where condition
+        /// </summary>
+        /// <param name="field">It is column name which you want to filter</param>
+        /// <param name="operator">It is comparison operator</param>
+        /// <param name="compareValue">It is filter value</param>
+        /// <param name="level">It is level. It applies AND operation for all where clause in same level and applies OR operation for different level </param>
         /// <returns></returns>
         public WhereClause AddWhere(string field, Comparison @operator, object compareValue, int level)
         {
