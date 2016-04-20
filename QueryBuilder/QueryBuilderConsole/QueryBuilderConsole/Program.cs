@@ -70,22 +70,24 @@ namespace QueryBuilderConsole
             states.SelectColumn("StateId");
             deleteQuery.AddWhere("Id", Comparison.In, states);
             //var deleteText = deleteQuery.BuildQuery();
-            
-            
 
             InsertQueryBuilder insertQuery = new InsertQueryBuilder("Student");
-            insertQuery.SetColumns(new string[] { "FirstName", "LastName", "Address", "Email", "IsActive" });
-            //insertQuery.SetValues(new object[] { "Nilesh", "Patil", "Kolhapur", "nilesh@gmail.com", 1 });
-
             SelectQueryBuilder studentData = new SelectQueryBuilder();
             studentData.SelectFromTable("Student");
             studentData.AddWhere("Id", Comparison.Equals, 1);
             studentData.SelectColumns(new string[] { "FirstName", "LastName", "Address", "Email", "IsActive" });
             
-            insertQuery.AddSelectQuery(studentData);
+            insertQuery.SetSelectQuery(studentData, new string[] { "FirstName", "LastName", "Address", "Email", "IsActive" });
             var t = insertQuery.BuildQuery();
 
-            Console.WriteLine(t);
+            UpdateQueryBuilder updateQuery = new UpdateQueryBuilder("Student");
+            updateQuery.SetColumnValue("FirstName", "Test");
+            updateQuery.SetColumnValue("LastName", "Test");
+            updateQuery.SetColumnValue("IsActive", "0");
+            updateQuery.AddWhere("Id", Comparison.Equals, 100002);
+            var updateQueryText = updateQuery.BuildQuery();
+
+            Console.WriteLine(updateQueryText);
             Console.ReadKey(true);
 
 

@@ -10,7 +10,6 @@ namespace QueryBuilder
     public class DeleteQueryBuilder:QueryBuilder
     {
         #region Properties
-        protected string _tableName { get; set; }
         protected SelectQueryBuilder _selectQueryBuilder { get; set; }
         #endregion
 
@@ -23,6 +22,10 @@ namespace QueryBuilder
         #endregion
 
         #region Public
+        /// <summary>
+        /// It builds the query and returns string
+        /// </summary>
+        /// <returns></returns>
         public override string BuildQuery()
         {
             var query = "DELETE FROM " + _tableName;
