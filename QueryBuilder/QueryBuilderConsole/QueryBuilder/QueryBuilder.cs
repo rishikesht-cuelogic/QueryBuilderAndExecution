@@ -7,15 +7,18 @@ using System.Threading.Tasks;
 
 namespace QueryBuilder
 {
+    /// <summary>
+    /// It is an abstract class which is used in DELETE and UPDATE query builder.
+    /// </summary>
     public abstract class QueryBuilder: IQueryBuilder
     {
         #region Properties and Fields
-        protected string _tableName { get; set; }
-        protected WhereStatement _whereStatement = new WhereStatement();
+        protected string tableName { get; set; }
+        protected WhereStatement whereStatement = new WhereStatement();
         internal WhereStatement WhereStatement
         {
-            get { return _whereStatement; }
-            set { _whereStatement = value; }
+            get { return whereStatement; }
+            set { whereStatement = value; }
         }
         #endregion
 
@@ -26,14 +29,14 @@ namespace QueryBuilder
         /// <param name="tableName"></param>
         public void SetTableName(string tableName)
         {
-            this._tableName = tableName;
+            this.tableName = tableName;
         }
         public void AddWhere(WhereClause clause) {
             AddWhere(clause, 1);
         }
         public void AddWhere(WhereClause clause, int level)
         {
-            _whereStatement.Add(clause, level);
+            whereStatement.Add(clause, level);
         }
         /// <summary>
         /// It add where condition.
@@ -59,7 +62,7 @@ namespace QueryBuilder
         public WhereClause AddWhere(string field, Comparison @operator, object compareValue, int level)
         {
             WhereClause NewWhereClause = new WhereClause(field, @operator, compareValue);
-            _whereStatement.Add(NewWhereClause, level);
+            whereStatement.Add(NewWhereClause, level);
             return NewWhereClause;
         }
         public WhereClause AddWhere(string field, Comparison @operator, SelectQueryBuilder selectQueryBuilder)
@@ -69,7 +72,7 @@ namespace QueryBuilder
         public WhereClause AddWhere(string field, Comparison @operator, SelectQueryBuilder selectQueryBuilder, int level)
         {
             WhereClause NewWhereClause = new WhereClause(field, @operator, selectQueryBuilder);
-            _whereStatement.Add(NewWhereClause, level);
+            whereStatement.Add(NewWhereClause, level);
             return NewWhereClause;
         }
         #endregion

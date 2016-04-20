@@ -5,57 +5,59 @@ using QueryBuilder.Enums;
 
 namespace QueryBuilder
 {
+    /// <summary>
+    /// It is used to create SELECT query.
+    /// </summary>
     public class SelectQueryBuilder : IQueryBuilder
     {
-        protected bool _distinct = false;
-        protected TopClause _topClause = new TopClause(100, TopUnit.Percent);
-        protected List<string> _selectedColumns = new List<string>();	// array of string
-        protected List<string> _selectedTables = new List<string>();	// array of string
-        protected List<JoinClause> _joins = new List<JoinClause>();	// array of JoinClause
-        protected WhereStatement _whereStatement = new WhereStatement();
-        protected List<OrderByClause> _orderByStatement = new List<OrderByClause>();	// array of OrderByClause
-        protected List<string> _groupByColumns = new List<string>();		// array of string
-        protected WhereStatement _havingStatement = new WhereStatement();
-        protected IdbRelationship _dbRelationship;
+        protected bool distinct = false;
+        protected TopClause topClause = new TopClause(100, TopUnit.Percent);
+        protected List<string> selectedColumns = new List<string>();	// array of string
+        protected List<string> selectedTables = new List<string>();	// array of string
+        protected List<JoinClause> joins = new List<JoinClause>();	// array of JoinClause
+        protected WhereStatement whereStatement = new WhereStatement();
+        protected List<OrderByClause> orderByStatement = new List<OrderByClause>();	// array of OrderByClause
+        protected List<string> groupByColumns = new List<string>();		// array of string
+        protected WhereStatement havingStatement = new WhereStatement();
+        protected IdbRelationship dbRelationship;
 
         internal WhereStatement WhereStatement
         {
-            get { return _whereStatement; }
-            set { _whereStatement = value; }
+            get { return whereStatement; }
+            set { whereStatement = value; }
         }
 
         public SelectQueryBuilder()
         {
-            _dbRelationship = new MSSQLRelationship();
         }
         /// <summary>
         /// Parameterized constructor which accepts IdbRelationship 
         /// </summary>
         /// <param name="dbRelationship">Auto detection of foreign key and primary key</param>
-        public SelectQueryBuilder(IdbRelationship dbRelationship = null)
+        public SelectQueryBuilder(IdbRelationship dbRelationship)
         {
-            _dbRelationship = (dbRelationship != null) ? dbRelationship : new MSSQLRelationship();
+            this.dbRelationship = dbRelationship;
         }
 
         public bool Distinct
         {
-            get { return _distinct; }
-            set { _distinct = value; }
+            get { return distinct; }
+            set { distinct = value; }
         }
 
         public int TopRecords
         {
-            get { return _topClause.Quantity; }
+            get { return topClause.Quantity; }
             set
             {
-                _topClause.Quantity = value;
-                _topClause.Unit = TopUnit.Records;
+                topClause.Quantity = value;
+                topClause.Unit = TopUnit.Records;
             }
         }
         public TopClause TopClause
         {
-            get { return _topClause; }
-            set { _topClause = value; }
+            get { return topClause; }
+            set { topClause = value; }
         }
 
         /// <summary>
@@ -65,8 +67,8 @@ namespace QueryBuilder
         {
             get
             {
-                if (_selectedColumns.Count > 0)
-                    return _selectedColumns.ToArray();
+                if (selectedColumns.Count > 0)
+                    return selectedColumns.ToArray();
                 else
                     return new string[1] { "*" };
             }
@@ -76,14 +78,14 @@ namespace QueryBuilder
         /// </summary>
         public string[] SelectedTables
         {
-            get { return _selectedTables.ToArray(); }
+            get { return selectedTables.ToArray(); }
         }
         /// <summary>
         /// It selects all columns
         /// </summary>
         public void SelectAllColumns()
         {
-            _selectedColumns.Clear();
+            selectedColumns.Clear();
         }
         /// <summary>
         /// It adds aggregate function COUNT()
@@ -98,8 +100,8 @@ namespace QueryBuilder
         /// <param name="column">It is column name which will be selected</param>
         public void SelectColumn(string column)
         {
-            _selectedColumns.Clear();
-            _selectedColumns.Add(column);
+            selectedColumns.Clear();
+            selectedColumns.Add(column);
         }
         /// <summary>
         /// It selects multiple columns
@@ -107,10 +109,10 @@ namespace QueryBuilder
         /// <param name="columns">It is array of selectable column's names</param>
         public void SelectColumns(params string[] columns)
         {
-            _selectedColumns.Clear();
+            selectedColumns.Clear();
             foreach (string column in columns)
             {
-                _selectedColumns.Add(column);
+                selectedColumns.Add(column);
             }
         }
         /// <summary>
@@ -119,8 +121,8 @@ namespace QueryBuilder
         /// <param name="table">It is table name</param>
         public void SelectFromTable(string table)
         {
-            _selectedTables.Clear();
-            _selectedTables.Add(table);
+            selectedTables.Clear();
+            selectedTables.Add(table);
         }
         /// <summary>
         /// It selects multiple tables
@@ -128,10 +130,10 @@ namespace QueryBuilder
         /// <param name="tables">It is array of tables names</param>
         public void SelectFromTables(params string[] tables)
         {
-            _selectedTables.Clear();
+            selectedTables.Clear();
             foreach (string Table in tables)
             {
-                _selectedTables.Add(Table);
+                selectedTables.Add(Table);
             }
         }
         /// <summary>
@@ -140,7 +142,7 @@ namespace QueryBuilder
         /// <param name="newJoin">It is join clause</param>
         public void AddJoin(JoinClause newJoin)
         {
-            _joins.Add(newJoin);
+            joins.Add(newJoin);
         }
         /// <summary>
         /// Add new join using all parameters
@@ -154,7 +156,7 @@ namespace QueryBuilder
         public void AddJoin(JoinType join, string toTableName, string toColumnName, string fromTableName, string fromColumnName, Comparison @operator=Comparison.Equals)
         {
             JoinClause NewJoin = new JoinClause(join, toTableName, toColumnName, @operator, fromTableName, fromColumnName);
-            _joins.Add(NewJoin);
+            joins.Add(NewJoin);
         }
         /// <summary>
         ///  Add new join using two table names. It will auto detect referenced column name and primary key column name
@@ -165,23 +167,23 @@ namespace QueryBuilder
         /// <param name="operator">It is comparison operator. Default is equality</param>
         public void AddJoin(JoinType join, string toTableName, string fromTableName, Comparison @operator=Comparison.Equals)
         {
-            var relation = _dbRelationship.GetRelationInfo(fromTableName, toTableName);
+            var relation = dbRelationship.GetRelationInfo(fromTableName, toTableName);
             JoinClause NewJoin = new JoinClause(join, toTableName, relation.ToColumnName, @operator, fromTableName, relation.FromColumnName);
-            _joins.Add(NewJoin);
+            joins.Add(NewJoin);
         }
         /// <summary>
         /// Property of WhereStatement. 
         /// </summary>
         public WhereStatement Where
         {
-            get { return _whereStatement; }
-            set { _whereStatement = value; }
+            get { return whereStatement; }
+            set { whereStatement = value; }
         }
 
         public void AddWhere(WhereClause clause) { AddWhere(clause, 1); }
         public void AddWhere(WhereClause clause, int level)
         {
-            _whereStatement.Add(clause, level);
+            whereStatement.Add(clause, level);
         }
         /// <summary>
         /// It add where condition.
@@ -203,7 +205,7 @@ namespace QueryBuilder
         public WhereClause AddWhere(string field, Comparison @operator, object compareValue, int level)
         {
             WhereClause NewWhereClause = new WhereClause(field, @operator, compareValue);
-            _whereStatement.Add(NewWhereClause, level);
+            whereStatement.Add(NewWhereClause, level);
             return NewWhereClause;
         }
         /// <summary>
@@ -212,7 +214,7 @@ namespace QueryBuilder
         /// <param name="clause">Clause have field on which you want to sort it and sort type. i.e. Ascending or Descending. Default is Ascending sort</param>
         public void AddOrderBy(OrderByClause clause)
         {
-            _orderByStatement.Add(clause);
+            orderByStatement.Add(clause);
         }
         /// <summary>
         /// It is used to sort the data
@@ -228,7 +230,7 @@ namespace QueryBuilder
         public void AddOrderBy(string field, Sorting order=Sorting.Ascending)
         {
             OrderByClause NewOrderByClause = new OrderByClause(field, order);
-            _orderByStatement.Add(NewOrderByClause);
+            orderByStatement.Add(NewOrderByClause);
         }
         /// <summary>
         /// It is used to Group by clause
@@ -238,7 +240,7 @@ namespace QueryBuilder
         {
             foreach (string Column in columns)
             {
-                _groupByColumns.Add(Column);
+                groupByColumns.Add(Column);
             }
         }
         /// <summary>
@@ -246,8 +248,8 @@ namespace QueryBuilder
         /// </summary>
         public WhereStatement Having
         {
-            get { return _havingStatement; }
-            set { _havingStatement = value; }
+            get { return havingStatement; }
+            set { havingStatement = value; }
         }
         /// <summary>
         /// It is used to having by clause which is used in Group By clause
@@ -261,7 +263,7 @@ namespace QueryBuilder
         /// <param name="level">It is having by level </param>
         public void AddHaving(WhereClause clause, int level)
         {
-            _havingStatement.Add(clause, level);
+            havingStatement.Add(clause, level);
         }
         /// <summary>
         /// It is used to having by clause which is used in Group By clause
@@ -290,7 +292,7 @@ namespace QueryBuilder
         public WhereClause AddHaving(string field, Comparison @operator, object compareValue, int level)
         {
             WhereClause NewWhereClause = new WhereClause(field, @operator, compareValue);
-            _havingStatement.Add(NewWhereClause, level);
+            havingStatement.Add(NewWhereClause, level);
             return NewWhereClause;
         }
         /// <summary>
@@ -311,16 +313,16 @@ namespace QueryBuilder
             string Query = "SELECT ";
 
             // Output Distinct
-            if (_distinct)
+            if (distinct)
             {
                 Query += "DISTINCT ";
             }
 
             // Output Top clause; Skip If it is 100 percent;
-            if (!(_topClause.Quantity == 100 & _topClause.Unit == TopUnit.Percent))
+            if (!(topClause.Quantity == 100 & topClause.Unit == TopUnit.Percent))
             {
-                Query += "TOP " + _topClause.Quantity;
-                if (_topClause.Unit == TopUnit.Percent)
+                Query += "TOP " + topClause.Quantity;
+                if (topClause.Unit == TopUnit.Percent)
                 {
                     Query += " PERCENT";
                 }
@@ -328,16 +330,16 @@ namespace QueryBuilder
             }
 
             // Output column names
-            if (_selectedColumns.Count == 0)
+            if (selectedColumns.Count == 0)
             {
-                if (_selectedTables.Count == 1)
-                    Query += _selectedTables[0] + "."; // By default only select * from the table that was selected. If there are any joins, it is the responsibility of the user to select the needed columns.
+                if (selectedTables.Count == 1)
+                    Query += selectedTables[0] + "."; // By default only select * from the table that was selected. If there are any joins, it is the responsibility of the user to select the needed columns.
 
                 Query += "*";
             }
             else
             {
-                foreach (string ColumnName in _selectedColumns)
+                foreach (string ColumnName in selectedColumns)
                 {
                     Query += ColumnName + ',';
                 }
@@ -345,10 +347,10 @@ namespace QueryBuilder
                 Query += ' ';
             }
             // Output table names
-            if (_selectedTables.Count > 0)
+            if (selectedTables.Count > 0)
             {
                 Query += " FROM ";
-                foreach (string TableName in _selectedTables)
+                foreach (string TableName in selectedTables)
                 {
                     Query += TableName + ',';
                 }
@@ -357,9 +359,9 @@ namespace QueryBuilder
             }
 
             // Output joins
-            if (_joins.Count > 0)
+            if (joins.Count > 0)
             {
-                foreach (JoinClause Clause in _joins)
+                foreach (JoinClause Clause in joins)
                 {
                     string JoinString = "";
                     switch (Clause.JoinType)
@@ -376,16 +378,16 @@ namespace QueryBuilder
             }
 
             // Output where statement
-            if (_whereStatement.ClauseLevels > 0)
+            if (whereStatement.ClauseLevels > 0)
             {
-                Query += " WHERE " + _whereStatement.BuildWhereStatement();
+                Query += " WHERE " + whereStatement.BuildWhereStatement();
             }
 
             // Output GroupBy statement
-            if (_groupByColumns.Count > 0)
+            if (groupByColumns.Count > 0)
             {
                 Query += " GROUP BY ";
-                foreach (string Column in _groupByColumns)
+                foreach (string Column in groupByColumns)
                 {
                     Query += Column + ',';
                 }
@@ -394,21 +396,21 @@ namespace QueryBuilder
             }
 
             // Output having statement
-            if (_havingStatement.ClauseLevels > 0)
+            if (havingStatement.ClauseLevels > 0)
             {
                 // Check if a Group By Clause was set
-                if (_groupByColumns.Count == 0)
+                if (groupByColumns.Count == 0)
                 {
                     throw new Exception("Having statement was set without Group By");
                 }
-                Query += " HAVING " + _havingStatement.BuildWhereStatement();
+                Query += " HAVING " + havingStatement.BuildWhereStatement();
             }
 
             // Output OrderBy statement
-            if (_orderByStatement.Count > 0)
+            if (orderByStatement.Count > 0)
             {
                 Query += " ORDER BY ";
-                foreach (OrderByClause Clause in _orderByStatement)
+                foreach (OrderByClause Clause in orderByStatement)
                 {
                     string OrderByClause = "";
                     switch (Clause.SortOrder)

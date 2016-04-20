@@ -7,33 +7,85 @@ using System.Threading.Tasks;
 
 namespace QueryBuilder
 {
-
+    /// <summary>
+    /// It is used to auto detect relationship between two tables of SQL Server database.
+    /// </summary>
     public class MSSQLRelationship : IdbRelationship
     {
+        #region Properties and fields
+        private Relation relation;
+        private Server server;
+        private Database db;
+        #endregion
+
+        #region C'tor
+        /// <summary>
+        /// This constructor connects database server by windows authentication
+        /// </summary>
+        /// <param name="serverName">This is database server name</param>
+        /// <param name="databaseName">This is database name which needs to connect you</param>
+        public MSSQLRelationship(string serverName, string databaseName)
+        {
+            try
+            {
+                server = new Server(serverName);//@"TEST-PC"
+                server.ConnectionContext.LoginSecure = true;
+                server.ConnectionContext.Connect();
+                db = server.Databases[databaseName];//"kantarPractice"
+                relation = new Relation();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+        }
+
+        /// <summary>
+        /// This constructor connects database server by database server authentication
+        /// </summary>
+        /// <param name="serverName">This is database server name</param>
+        /// <param name="userName">This is user name which needs to connect database</param>
+        /// <param name="password">This is password which needs to connect database</param>
+        /// <param name="databaseName">This is database name which needs to connect you</param>
+        public MSSQLRelationship(string serverName, string databaseName, string userName, string password)
+        {
+            try
+            {
+                server = new Server(serverName);//@"TEST-PC"
+                server.ConnectionContext.LoginSecure = false;
+                server.ConnectionContext.Login = userName;//"sa";
+                server.ConnectionContext.Password = password;//"pa$$word";
+                Database db = server.Databases[databaseName];//"kantarPractice"
+                relation = new Relation();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+        }
+        #endregion
+
+        #region Public
         public Relation GetRelationInfo(string fromTableName, string toTableName)
         {
-            Relation relation = new Relation();
-            Server myServer = new Server(@"TEST-PC");
-            if (myServer.ConnectionContext.IsOpen)
-                myServer.ConnectionContext.Disconnect();
+            if (server == null || db == null)
+                throw new Exception("Server or Database is not found. Please check server name and database name.");
+
+            if (server.ConnectionContext.IsOpen)
+                server.ConnectionContext.Disconnect();
 
             #region Authentication
-            //Using windows authentication
-            //myServer.ConnectionContext.LoginSecure = true;
-            //myServer.ConnectionContext.Connect();
-
             //Using SQL Server authentication
-            myServer.ConnectionContext.LoginSecure = false;
-            myServer.ConnectionContext.Login = "sa";
-            myServer.ConnectionContext.Password = "pa$$word";
-            Database db = myServer.Databases["kantarPractice"];
+
             #endregion
 
-            Table tb = db.Tables[fromTableName];
-            if (tb == null)
-                return null;
+            Table table = db.Tables[fromTableName];
+            if (table == null)
+                throw new Exception("Table not found.");
 
-            foreach (ForeignKey f in tb.ForeignKeys)
+            foreach (ForeignKey f in table.ForeignKeys)
             {
                 if (f != null && f.Columns.Count > 0)
                 {
@@ -41,15 +93,15 @@ namespace QueryBuilder
                     var referencedTableName = f.ReferencedTable;
                     if (referencedTableName == toTableName)
                     {
-                        var table = db.Tables[referencedTableName];
-                        if (table != null)
+                        var referencedTable = db.Tables[referencedTableName];
+                        if (referencedTable != null)
                         {
-                            var totalColumns = table.Columns.Count;
+                            var totalColumns = referencedTable.Columns.Count;
                             for (var i = 0; i < totalColumns; i++)
                             {
-                                if (table.Columns[i].InPrimaryKey)
+                                if (referencedTable.Columns[i].InPrimaryKey)
                                 {
-                                    var primaryKeyName = table.Columns[i].Name;
+                                    var primaryKeyName = referencedTable.Columns[i].Name;
                                     relation.FromTableName = fromTableName;
                                     relation.ToTableName = toTableName;
                                     relation.FromColumnName = referencedColumnName;
@@ -62,9 +114,8 @@ namespace QueryBuilder
                 }
             }
 
-
-            return null;
+            throw new Exception("No relationship found");
         }
-
+        #endregion
     }
 }

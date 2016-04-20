@@ -7,21 +7,24 @@ using System.Threading.Tasks;
 
 namespace QueryBuilder
 {
+    /// <summary>
+    /// It is used to create UPDATE query.
+    /// </summary>
     public class UpdateQueryBuilder : QueryBuilder
     {
         #region Properties and fields        
-        protected Dictionary<string, string> _columnValues;
+        protected Dictionary<string, string> columnValues;
         #endregion
 
         #region C'tor
         public UpdateQueryBuilder()
         {
-            _columnValues = new Dictionary<string, string>();
+            columnValues = new Dictionary<string, string>();
         }
         public UpdateQueryBuilder(string tableName)
         {
-            _columnValues = new Dictionary<string, string>();
-            this._tableName = tableName;
+            columnValues = new Dictionary<string, string>();
+            this.tableName = tableName;
         }
         #endregion
 
@@ -29,7 +32,7 @@ namespace QueryBuilder
         private string GetSettersInString()
         {
             var text = "";
-            foreach (var item in _columnValues)
+            foreach (var item in columnValues)
             {
                 text = text + item.Key + " = '" + item.Value + "',";
             }
@@ -46,9 +49,9 @@ namespace QueryBuilder
         /// <returns></returns>
         public override string BuildQuery()
         {
-            var query = "UPDATE " + _tableName + " SET ";
+            var query = "UPDATE " + tableName + " SET ";
             query = query + GetSettersInString()+" WHERE ";
-            query = query + _whereStatement.BuildWhereStatement();
+            query = query + whereStatement.BuildWhereStatement();
             return query;
         }
 
@@ -60,7 +63,7 @@ namespace QueryBuilder
         /// <param name="value">It is value which will be assigned</param>
         public void SetColumnValue(string columnName, object value)
         {
-            _columnValues.Add(columnName, value.ToString());
+            columnValues.Add(columnName, value.ToString());
         }
 
         #endregion

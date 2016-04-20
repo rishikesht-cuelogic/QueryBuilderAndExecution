@@ -7,17 +7,20 @@ using System.Threading.Tasks;
 
 namespace QueryBuilder
 {
+    /// <summary>
+    /// It is used to create DELETE query.
+    /// </summary>
     public class DeleteQueryBuilder:QueryBuilder
     {
         #region Properties
-        protected SelectQueryBuilder _selectQueryBuilder { get; set; }
+        protected SelectQueryBuilder selectQueryBuilder { get; set; }
         #endregion
 
         #region Constructor
         public DeleteQueryBuilder() { }
         public DeleteQueryBuilder(string tableName)
         {
-            this._tableName = tableName;
+            this.tableName = tableName;
         }
         #endregion
 
@@ -28,12 +31,12 @@ namespace QueryBuilder
         /// <returns></returns>
         public override string BuildQuery()
         {
-            var query = "DELETE FROM " + _tableName;
+            var query = "DELETE FROM " + tableName;
 
             // Output where statement
-            if (_whereStatement.ClauseLevels > 0)
+            if (whereStatement !=null && whereStatement.ClauseLevels > 0)
             {
-                query += " WHERE " + _whereStatement.BuildWhereStatement();
+                query += " WHERE " + whereStatement.BuildWhereStatement();
             }
 
             return query;
@@ -42,7 +45,7 @@ namespace QueryBuilder
         public WhereClause AddWhere(string field, Comparison @operator, int level, SelectQueryBuilder selectQueryBuilder)
         {
             WhereClause NewWhereClause = new WhereClause(field, @operator, selectQueryBuilder);
-            _whereStatement.Add(NewWhereClause, level);
+            whereStatement.Add(NewWhereClause, level);
             return NewWhereClause;
         }
         #endregion  

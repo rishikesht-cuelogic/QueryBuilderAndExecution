@@ -1,6 +1,6 @@
 namespace QueryBuilder
 {
-    public class SqlLiteral
+    internal class SqlLiteral
     {
         public static string StatementRowsAffected = "SELECT @@ROWCOUNT";
 

@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace QueryBuilder
 {
+    /// <summary>
+    /// It provides services which gives relationship between two tables.
+    /// </summary>
     public interface IdbRelationship
     {
         Relation GetRelationInfo(string fromTableName, string toTableName);

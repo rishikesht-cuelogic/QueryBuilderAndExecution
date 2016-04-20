@@ -7,37 +7,40 @@ using System.Threading.Tasks;
 
 namespace QueryBuilder
 {
+    /// <summary>
+    /// It is used to create INSERT query.
+    /// </summary>
     public class InsertQueryBuilder : IQueryBuilder
     {
         #region Properties
-        protected string _tableName { get; set; }
-        protected Dictionary<string, string> _columnValues;
-        protected List<string> _selectedColumns = new List<string>();
-        protected SelectQueryBuilder _selectQueryBuilder { get; set; }
+        protected string tableName { get; set; }
+        protected Dictionary<string, string> columnValues;
+        protected List<string> selectedColumns = new List<string>();
+        protected SelectQueryBuilder selectQueryBuilder { get; set; }
         #endregion
 
         #region C'tor
         public InsertQueryBuilder() {
-            _columnValues = new Dictionary<string, string>();
+            columnValues = new Dictionary<string, string>();
         }
         public InsertQueryBuilder(string tableName)
         {
-            _columnValues = new Dictionary<string, string>();
-            this._tableName = tableName;
+            columnValues = new Dictionary<string, string>();
+            this.tableName = tableName;
         }
         #endregion
 
         #region Private
         private string GetColumns()
         {
-            if (_selectQueryBuilder != null)
-                return Utility.ConvertArrayToString(_selectedColumns,true);
+            if (selectQueryBuilder != null)
+                return Utility.ConvertArrayToString(selectedColumns,true);
 
-            return Utility.ConvertArrayToString(_columnValues.Select(t => t.Key).ToList(),true);
+            return Utility.ConvertArrayToString(columnValues.Select(t => t.Key).ToList(),true);
         }
         private string GetValues()
         {
-            return Utility.ConvertArrayToString(_columnValues.Select(t => t.Value.ToString()).ToList(),true);
+            return Utility.ConvertArrayToString(columnValues.Select(t => t.Value.ToString()).ToList(),true);
         }
         #endregion
 
@@ -48,7 +51,7 @@ namespace QueryBuilder
         /// <param name="tableName"></param>
         public void SetTableName(string tableName)
         {
-            this._tableName = tableName;
+            this.tableName = tableName;
         }
         /// <summary>
         /// It is used to value to column
@@ -57,7 +60,7 @@ namespace QueryBuilder
         /// <param name="value">It is value which will be assigned</param>
         public void SetColumnValue(string columnName, object value)
         {
-            _columnValues.Add(columnName, value.ToString());
+            columnValues.Add(columnName, value.ToString());
         }
         /// <summary>
         /// It builds the query and returns string
@@ -65,11 +68,11 @@ namespace QueryBuilder
         /// <returns></returns>
         public string BuildQuery()
         {
-            var query = "INSERT INTO " + _tableName+" ";
+            var query = "INSERT INTO " + tableName+" ";
             query = query + GetColumns();
-            if (_selectQueryBuilder != null)
+            if (selectQueryBuilder != null)
             {
-                return query + " " + _selectQueryBuilder.BuildQuery();
+                return query + " " + selectQueryBuilder.BuildQuery();
             }
             query = query + " VALUES ";
             query = query + GetValues();
@@ -84,9 +87,9 @@ namespace QueryBuilder
         {
             foreach(var item in columns)
             {
-                _selectedColumns.Add(item);
+                selectedColumns.Add(item);
             }
-            _selectQueryBuilder = selectQueryBuilder;
+            this.selectQueryBuilder = selectQueryBuilder;
         }
         #endregion     
 
