@@ -8,8 +8,6 @@ namespace PortableDataAccessLayer
     /// </summary>
     internal class AssemblyProvider
     {
-        private static AssemblyProvider _assemblyProvider = null;
-       
         private string _providerName = string.Empty;
         public AssemblyProvider()
         {

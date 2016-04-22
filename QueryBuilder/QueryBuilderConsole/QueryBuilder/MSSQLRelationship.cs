@@ -26,19 +26,11 @@ namespace QueryBuilder
         /// <param name="databaseName">This is database name which needs to connect you</param>
         public MSSQLRelationship(string serverName, string databaseName)
         {
-            try
-            {
-                server = new Server(serverName);//@"TEST-PC"
-                server.ConnectionContext.LoginSecure = true;
-                server.ConnectionContext.Connect();
-                db = server.Databases[databaseName];//"kantarPractice"
-                relation = new Relation();
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-
+            server = new Server(serverName);//@"TEST-PC"
+            server.ConnectionContext.LoginSecure = true;
+            server.ConnectionContext.Connect();
+            db = server.Databases[databaseName];//"kantarPractice"
+            relation = new Relation();
         }
 
         /// <summary>
@@ -50,20 +42,12 @@ namespace QueryBuilder
         /// <param name="databaseName">This is database name which needs to connect you</param>
         public MSSQLRelationship(string serverName, string databaseName, string userName, string password)
         {
-            try
-            {
-                server = new Server(serverName);//@"TEST-PC"
-                server.ConnectionContext.LoginSecure = false;
-                server.ConnectionContext.Login = userName;//"sa";
-                server.ConnectionContext.Password = password;//"pa$$word";
-                Database db = server.Databases[databaseName];//"kantarPractice"
-                relation = new Relation();
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-
+            server = new Server(serverName);//@"TEST-PC"
+            server.ConnectionContext.LoginSecure = false;
+            server.ConnectionContext.Login = userName;//"sa";
+            server.ConnectionContext.Password = password;//"pa$$word";
+            Database db = server.Databases[databaseName];//"kantarPractice"
+            relation = new Relation();
         }
         #endregion
 

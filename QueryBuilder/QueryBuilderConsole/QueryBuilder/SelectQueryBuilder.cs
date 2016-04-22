@@ -174,6 +174,9 @@ namespace QueryBuilder
         /// <param name="operator">It is comparison operator. Default is equality</param>
         public void AddJoin(JoinType join, string toTableName, string fromTableName, Comparison @operator=Comparison.Equals)
         {
+            if (dbRelationship == null)
+                throw new NullReferenceException("dbRelationship is not initialize. Please use parameterized constructor of SelectQueryBuilder to initialize dbRelationship");
+
             var relation = dbRelationship.GetRelationInfo(fromTableName, toTableName);
             JoinClause NewJoin = new JoinClause(join, toTableName, relation.ToColumnName, @operator, fromTableName, relation.FromColumnName);
             joins.Add(NewJoin);
@@ -327,15 +330,18 @@ namespace QueryBuilder
         /// <returns></returns>
         public string BuildQuery()
         {
-            return (string)this.GetQuery();
+            return GetQuery();
         }
 
         /// <summary>
         /// Builds the select query
         /// </summary>
         /// <returns>Returns a string containing the query, or a DbCommand containing a command with parameters</returns>
-        private object GetQuery()
+        private string GetQuery()
         {
+            if (selectedTables == null || selectedTables.Count == 0)
+                throw new Exception("At least one table name must be specified");
+
             string Query = "SELECT ";
 
             // Output Distinct
@@ -343,6 +349,12 @@ namespace QueryBuilder
             {
                 Query += "DISTINCT ";
             }
+
+            if(topClause.Quantity<0)
+                throw new IndexOutOfRangeException("value of top clause should be greater than 0");
+
+            if ((topClause.Unit == TopUnit.Percent) && (topClause.Quantity > 100 || topClause.Quantity < 0))
+                throw new IndexOutOfRangeException("percentage should be less than 100 and greater than 0");
 
             // Output Top clause; Skip If it is 100 percent;
             if (!(topClause.Quantity == 100 & topClause.Unit == TopUnit.Percent))
@@ -370,7 +382,7 @@ namespace QueryBuilder
                     Query += ColumnName + ',';
                 }
                 Query = Query.TrimEnd(','); // Trim de last comma inserted by foreach loop
-                Query += ' ';
+                //Query += ' ';
             }
             // Output table names
             if (selectedTables.Count > 0)
@@ -451,8 +463,10 @@ namespace QueryBuilder
                 Query = Query.TrimEnd(','); // Trim de last AND inserted by foreach loop
                 Query += ' ';
             }
+            Query = Query.Trim();
             return Query;
         }
+
     }
 
 }

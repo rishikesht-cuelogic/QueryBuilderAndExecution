@@ -17,7 +17,7 @@ namespace QueryBuilder
         #endregion
 
         #region Constructor
-        public DeleteQueryBuilder() { }
+        //public DeleteQueryBuilder() { }
         public DeleteQueryBuilder(string tableName)
         {
             this.tableName = tableName;
@@ -31,15 +31,23 @@ namespace QueryBuilder
         /// <returns></returns>
         public override string BuildQuery()
         {
-            var query = "DELETE FROM " + tableName;
-
-            // Output where statement
-            if (whereStatement !=null && whereStatement.ClauseLevels > 0)
+            try
             {
-                query += " WHERE " + whereStatement.BuildWhereStatement();
-            }
+                var query = "DELETE FROM " + tableName;
 
-            return query;
+                // Output where statement
+                if (whereStatement != null && whereStatement.ClauseLevels > 0)
+                {
+                    query += " WHERE " + whereStatement.BuildWhereStatement();
+                }
+
+                return query;
+            }
+            catch(Exception e)
+            {
+                throw e;
+            }
+            
         }
 
         public WhereClause AddWhere(string field, Comparison @operator, int level, SelectQueryBuilder selectQueryBuilder)

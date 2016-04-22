@@ -17,10 +17,10 @@ namespace QueryBuilder
         #endregion
 
         #region C'tor
-        public UpdateQueryBuilder()
-        {
-            columnValues = new Dictionary<string, string>();
-        }
+        //public UpdateQueryBuilder()
+        //{
+        //    columnValues = new Dictionary<string, string>();
+        //}
         public UpdateQueryBuilder(string tableName)
         {
             columnValues = new Dictionary<string, string>();
@@ -49,10 +49,17 @@ namespace QueryBuilder
         /// <returns></returns>
         public override string BuildQuery()
         {
-            var query = "UPDATE " + tableName + " SET ";
-            query = query + GetSettersInString()+" WHERE ";
-            query = query + whereStatement.BuildWhereStatement();
-            return query;
+            try
+            {
+                var query = "UPDATE " + tableName + " SET ";
+                query = query + GetSettersInString() + " WHERE ";
+                query = query + whereStatement.BuildWhereStatement();
+                return query;
+            }
+            catch(Exception e)
+            {
+                throw e;
+            }
         }
 
       

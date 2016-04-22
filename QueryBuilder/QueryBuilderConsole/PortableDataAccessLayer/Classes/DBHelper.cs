@@ -17,7 +17,6 @@ namespace PortableDataAccessLayer
         private ConnectionManager _connectionManager = null;
         private CommandBuilder _commandBuilder = null;
         private DataAdapterManager _dbAdapterManager = new DataAdapterManager();
-        private static DBHelper _dbHelper = null;
         private IDbConnection _connection = null;
         private string _providerName = string.Empty;
         private AssemblyProvider _assemblyProvider = null;
