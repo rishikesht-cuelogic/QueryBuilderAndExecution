@@ -66,6 +66,7 @@ namespace QueryBuilder
             foreach (List<WhereClause> WhereStatement in this) // Loop through all statement levels, OR them together
                 {
                 string LevelWhere = "";
+                bool addBracket = WhereStatement.Count > 1;
                 foreach (WhereClause Clause in WhereStatement) // Loop through all conditions, AND them together
                 {
                     string WhereClause = "";
@@ -100,9 +101,9 @@ namespace QueryBuilder
                         switch (SubWhereClause.LogicOperator)
                         {
                             case LogicOperator.And:
-                                WhereClause += " AND "; break;
+                                WhereClause += " "+Constants.And+" "; break;
                             case LogicOperator.Or:
-                                WhereClause += " OR "; break;
+                                WhereClause += " "+Constants.Or; break;
                         }
 
                         if (useCommandObject)
@@ -131,9 +132,15 @@ namespace QueryBuilder
                         }
                     }
                     if (Clause.SelectQueryBuilder != null)
-                        LevelWhere += WhereClause + " AND ";
+                        LevelWhere += WhereClause + " "+Constants.And+" ";
                     else
-                        LevelWhere += "(" + WhereClause + ") AND ";
+                    {
+                        if(addBracket)
+                            LevelWhere += "(" + WhereClause + ") "+ Constants.And+" ";
+                        else
+                            LevelWhere +=  WhereClause +" "+ Constants.And+" ";
+                    }
+                        
                 }
                 LevelWhere = LevelWhere.Substring(0, LevelWhere.Length - 5); // Trim de last AND inserted by foreach loop
                 if (WhereStatement.Count > 1)
@@ -144,7 +151,7 @@ namespace QueryBuilder
                 {
                     Result += " " + LevelWhere + " ";
                 }
-                Result += " OR";
+                Result += " "+Constants.Or;
             }
             Result = Result.Substring(0, Result.Length - 2); // Trim de last OR inserted by foreach loop
 
@@ -207,23 +214,23 @@ namespace QueryBuilder
                 switch (comparisonOperator)
                 {
                     case Comparison.Equals:
-                        Output = fieldName + " = " + selectQuery; break;
+                        Output = fieldName + " "+Constants.EqualTo+" " + selectQuery; break;
                     case Comparison.NotEquals:
-                        Output = fieldName + " <> " + selectQuery; break;
+                        Output = fieldName + " "+Constants.NotEqualTo+" " + selectQuery; break;
                     case Comparison.GreaterThan:
-                        Output = fieldName + " > " + selectQuery; break;
+                        Output = fieldName + " "+Constants.GreaterThan+" " + selectQuery; break;
                     case Comparison.GreaterOrEquals:
-                        Output = fieldName + " >= " + selectQuery; break;
+                        Output = fieldName + " "+Constants.GreaterThanEqualTo+" " + selectQuery; break;
                     case Comparison.LessThan:
-                        Output = fieldName + " < " + selectQuery; break;
+                        Output = fieldName + " "+Constants.LessThan+" " + selectQuery; break;
                     case Comparison.LessOrEquals:
-                        Output = fieldName + " <= " + selectQuery; break;
+                        Output = fieldName + " "+Constants.LessThanEqualTo+" " + selectQuery; break;
                     case Comparison.Like:
-                        Output = fieldName + " LIKE " + selectQuery; break;
+                        Output = fieldName +" " +Constants.Like+" " + selectQuery; break;
                     case Comparison.NotLike:
-                        Output = "NOT " + fieldName + " LIKE " + selectQuery; break;
+                        Output = " "+Constants.Not+" " + fieldName +" "+ Constants.Like+" " + selectQuery; break;
                     case Comparison.In:
-                        Output = fieldName + " IN (" + selectQuery + ")"; break;
+                        Output = fieldName +" "+ Constants.In+ " (" + selectQuery + ")"; break;
                 }
             }
             else // value==null	|| value==DBNull.Value
@@ -237,9 +244,9 @@ namespace QueryBuilder
                     switch (comparisonOperator)
                     {
                         case Comparison.Equals:
-                            Output = fieldName + " IS NULL"; break;
+                            Output = fieldName + " "+Constants.IsNull+" "; break;
                         case Comparison.NotEquals:
-                            Output = "NOT " + fieldName + " IS NULL"; break;
+                            Output = Constants.Not+" " + fieldName + " "+Constants.IsNull+" "; break;
                     }
                 }
             }
@@ -254,7 +261,7 @@ namespace QueryBuilder
 
             if (someValue == null)
             {
-                FormattedValue = "NULL";
+                FormattedValue = Constants.Null;
             }
             else
             {
@@ -262,7 +269,7 @@ namespace QueryBuilder
                 {
                     case "String": FormattedValue = "'" + ((string)someValue).Replace("'", "''") + "'"; break;
                     case "DateTime": FormattedValue = "'" + ((DateTime)someValue).ToString("yyyy/MM/dd hh:mm:ss") + "'"; break;
-                    case "DBNull": FormattedValue = "NULL"; break;
+                    case "DBNull": FormattedValue = Constants.Null; break;
                     case "Boolean": FormattedValue = (bool)someValue ? "1" : "0"; break;
                     case "SqlLiteral": FormattedValue = ((SqlLiteral)someValue).Value; break;
                     default: FormattedValue = someValue.ToString(); break;

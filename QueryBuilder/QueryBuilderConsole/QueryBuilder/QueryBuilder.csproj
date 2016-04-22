@@ -47,6 +47,7 @@
     <Compile Include="Clauses\TopClause.cs" />
     <Compile Include="Clauses\WhereClause.cs" />
     <Compile Include="Clauses\WhereStatement.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="InsertQueryBuilder.cs" />
     <Compile Include="DeleteQueryBuilder.cs" />
     <Compile Include="Enum\Comparison.cs" />

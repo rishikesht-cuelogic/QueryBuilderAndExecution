@@ -342,27 +342,27 @@ namespace QueryBuilder
             if (selectedTables == null || selectedTables.Count == 0)
                 throw new Exception("At least one table name must be specified");
 
-            string Query = "SELECT ";
-
-            // Output Distinct
-            if (distinct)
-            {
-                Query += "DISTINCT ";
-            }
-
-            if(topClause.Quantity<0)
+            if (topClause.Quantity < 0)
                 throw new IndexOutOfRangeException("value of top clause should be greater than 0");
 
             if ((topClause.Unit == TopUnit.Percent) && (topClause.Quantity > 100 || topClause.Quantity < 0))
                 throw new IndexOutOfRangeException("percentage should be less than 100 and greater than 0");
 
+            string Query = Constants.Select+" ";
+
+            // Output Distinct
+            if (distinct)
+            {
+                Query += Constants.Distinct+" ";
+            }
+
             // Output Top clause; Skip If it is 100 percent;
             if (!(topClause.Quantity == 100 & topClause.Unit == TopUnit.Percent))
             {
-                Query += "TOP " + topClause.Quantity;
+                Query += Constants.Top+" " + topClause.Quantity;
                 if (topClause.Unit == TopUnit.Percent)
                 {
-                    Query += " PERCENT";
+                    Query += " "+Constants.Percent;
                 }
                 Query += " ";
             }
@@ -370,8 +370,8 @@ namespace QueryBuilder
             // Output column names
             if (selectedColumns.Count == 0)
             {
-                if (selectedTables.Count == 1)
-                    Query += selectedTables[0] + "."; // By default only select * from the table that was selected. If there are any joins, it is the responsibility of the user to select the needed columns.
+                //if (selectedTables.Count == 1)
+                //    Query += selectedTables[0] + "."; // By default only select * from the table that was selected. If there are any joins, it is the responsibility of the user to select the needed columns.
 
                 Query += "*";
             }
@@ -387,7 +387,7 @@ namespace QueryBuilder
             // Output table names
             if (selectedTables.Count > 0)
             {
-                Query += " FROM ";
+                Query += Constants.From+" ";
                 foreach (string TableName in selectedTables)
                 {
                     Query += TableName + ',';
@@ -404,12 +404,12 @@ namespace QueryBuilder
                     string JoinString = "";
                     switch (Clause.JoinType)
                     {
-                        case JoinType.InnerJoin: JoinString = "INNER JOIN"; break;
-                        case JoinType.OuterJoin: JoinString = "OUTER JOIN"; break;
-                        case JoinType.LeftJoin: JoinString = "LEFT JOIN"; break;
-                        case JoinType.RightJoin: JoinString = "RIGHT JOIN"; break;
+                        case JoinType.InnerJoin: JoinString = Constants.InnerJoin; break;
+                        case JoinType.OuterJoin: JoinString = Constants.OuterJoin; break;
+                        case JoinType.LeftJoin: JoinString = Constants.LeftJoin; break;
+                        case JoinType.RightJoin: JoinString = Constants.RightJoin; break;
                     }
-                    JoinString += " " + Clause.ToTable + " ON ";
+                    JoinString += " " + Clause.ToTable +" "+ Constants.On+" ";
                     JoinString += WhereStatement.CreateComparisonClause(Clause.FromTable + '.' + Clause.FromColumn, Clause.ComparisonOperator, new SqlLiteral(Clause.ToTable + '.' + Clause.ToColumn));
                     Query += JoinString + ' ';
                 }
@@ -418,13 +418,13 @@ namespace QueryBuilder
             // Output where statement
             if (whereStatement.ClauseLevels > 0)
             {
-                Query += " WHERE " + whereStatement.BuildWhereStatement();
+                Query += " "+Constants.Where+" " + whereStatement.BuildWhereStatement();
             }
 
             // Output GroupBy statement
             if (groupByColumns.Count > 0)
             {
-                Query += " GROUP BY ";
+                Query += " "+Constants.GroupBy+" ";
                 foreach (string Column in groupByColumns)
                 {
                     Query += Column + ',';
@@ -441,22 +441,22 @@ namespace QueryBuilder
                 {
                     throw new Exception("Having statement was set without Group By");
                 }
-                Query += " HAVING " + havingStatement.BuildWhereStatement();
+                Query += " "+Constants.Having+" " + havingStatement.BuildWhereStatement();
             }
 
             // Output OrderBy statement
             if (orderByStatement.Count > 0)
             {
-                Query += " ORDER BY ";
+                Query += " "+Constants.OrderBy+" ";
                 foreach (OrderByClause Clause in orderByStatement)
                 {
                     string OrderByClause = "";
                     switch (Clause.SortOrder)
                     {
                         case Sorting.Ascending:
-                            OrderByClause = Clause.FieldName + " ASC"; break;
+                            OrderByClause = Clause.FieldName + " "+Constants.Ascending; break;
                         case Sorting.Descending:
-                            OrderByClause = Clause.FieldName + " DESC"; break;
+                            OrderByClause = Clause.FieldName + " "+Constants.Descending; break;
                     }
                     Query += OrderByClause + ',';
                 }

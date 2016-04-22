@@ -33,12 +33,12 @@ namespace QueryBuilder
         {
             try
             {
-                var query = "DELETE FROM " + tableName;
+                var query = Constants.Delete+" "+Constants.From+" " + tableName;
 
                 // Output where statement
                 if (whereStatement != null && whereStatement.ClauseLevels > 0)
                 {
-                    query += " WHERE " + whereStatement.BuildWhereStatement();
+                    query += " "+Constants.Where+" " + whereStatement.BuildWhereStatement();
                 }
 
                 return query;

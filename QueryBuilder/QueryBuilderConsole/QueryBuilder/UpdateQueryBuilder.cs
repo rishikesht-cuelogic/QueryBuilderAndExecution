@@ -51,8 +51,8 @@ namespace QueryBuilder
         {
             try
             {
-                var query = "UPDATE " + tableName + " SET ";
-                query = query + GetSettersInString() + " WHERE ";
+                var query = Constants.Update+" " + tableName + " "+Constants.Set+" ";
+                query = query + GetSettersInString() + " "+Constants.Where+" ";
                 query = query + whereStatement.BuildWhereStatement();
                 return query;
             }

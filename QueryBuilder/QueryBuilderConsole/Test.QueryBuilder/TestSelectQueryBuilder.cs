@@ -18,7 +18,7 @@ namespace Test.QueryBuilder
             var output = query.BuildQuery().ToLower();
 
             //Assert
-            var expectedOutput = "select city.* from city";
+            var expectedOutput = "select * from city";
             Assert.AreEqual(expectedOutput, output);
         }
 
@@ -38,7 +38,35 @@ namespace Test.QueryBuilder
             Assert.AreEqual(expectedOutput, output);
         }
 
-     
+        [TestMethod]
+        public void SelectAllColumnsFromMultipleTables()
+        {
+            //Assign
+            var query = new SelectQueryBuilder();
+            query.SelectFromTables("country", "state", "city");
+
+            //Act
+            var output = query.BuildQuery().ToLower();
+
+            //Assert
+            var expectedOutput = "select * from country,state,city";
+            Assert.AreEqual(expectedOutput, output);
+        }
+
+        [TestMethod]
+        public void SelectQueryWithAliasColumnName()
+        {
+            //Assign
+            var query = new SelectQueryBuilder();
+            query.SelectFromTable("Student");
+            query.SelectColumn("FirstName [name]");
+            //Act
+            var output = query.BuildQuery().ToLower();
+
+            //Assert
+            var expectedOutput = "select firstname [name] from student";
+            Assert.AreEqual(expectedOutput, output);
+        }
 
         #region Exception Test
         [TestMethod]
@@ -52,16 +80,7 @@ namespace Test.QueryBuilder
             var output = query.BuildQuery().ToLower();
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(Exception))]
-        public void SelectQuery()
-        {
-            //Assign
-            var query = new SelectQueryBuilder();
-
-            //Act
-            var output = query.BuildQuery().ToLower();
-        }
+        
         #endregion
 
     }

@@ -92,17 +92,17 @@ namespace QueryBuilder
                 if (string.IsNullOrWhiteSpace(tableName))
                     throw new NullReferenceException("tableName should not be null or empty");
 
-                var query = "INSERT INTO " + tableName + "";
+                var query = Constants.Insert+" "+Constants.Into+" " + tableName + "";
                 if (listValues != null && listValues.Count > 0)
                 {
-                    return query + " VALUES" + Utility.ConvertArrayToStringWithWrapSingleQuote(listValues, true);
+                    return query + " "+Constants.Values + Utility.ConvertArrayToStringWithWrapSingleQuote(listValues, true);
                 }
                 query = query + GetColumns();
                 if (selectQueryBuilder != null)
                 {
                     return query + " " + selectQueryBuilder.BuildQuery();
                 }
-                query = query + " VALUES";
+                query = query + " "+ Constants.Values;
                 query = query + GetValues();
                 return query;
             }
