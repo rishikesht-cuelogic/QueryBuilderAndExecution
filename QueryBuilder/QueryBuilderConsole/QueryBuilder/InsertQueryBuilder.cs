@@ -70,7 +70,7 @@ namespace QueryBuilder
                 if (value == null)
                     throw new NullReferenceException("value should not be null");
 
-                if (!value.GetType().IsPrimitive && value.GetType().Name!="String")
+                if (!Utility.IsPrimitive(value) && value.GetType().Name!="String")
                     throw new ArgumentException("value should be primitive datatype");
 
                 columnValues.Add(columnName, value.ToString());
@@ -104,7 +104,7 @@ namespace QueryBuilder
                 }
                 query = query + " "+ Constants.Values;
                 query = query + GetValues();
-                return query;
+                return Utility.RemoveMultipleSpace(query);
             }
             catch(Exception e)
             {

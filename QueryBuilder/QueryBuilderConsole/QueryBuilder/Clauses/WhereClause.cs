@@ -77,6 +77,10 @@ namespace QueryBuilder
         }
         public WhereClause(string field, Comparison firstCompareOperator, object firstCompareValue)
         {
+            Validate.ColumnName(field);
+            if (firstCompareOperator != Comparison.In)
+                Validate.SqlValue(firstCompareValue);
+
             m_FieldName = field;
             m_ComparisonOperator = firstCompareOperator;
             m_Value = firstCompareValue;

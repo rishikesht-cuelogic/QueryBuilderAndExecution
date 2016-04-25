@@ -54,7 +54,7 @@ namespace QueryBuilder
                 var query = Constants.Update+" " + tableName + " "+Constants.Set+" ";
                 query = query + GetSettersInString() + " "+Constants.Where+" ";
                 query = query + whereStatement.BuildWhereStatement();
-                return query;
+                return Utility.RemoveMultipleSpace(query);
             }
             catch(Exception e)
             {

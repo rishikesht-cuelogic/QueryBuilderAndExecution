@@ -20,7 +20,22 @@ namespace QueryBuilder
         //public DeleteQueryBuilder() { }
         public DeleteQueryBuilder(string tableName)
         {
+            Validate.TableName(tableName);
             this.tableName = tableName;
+        }
+        /// <summary>
+        /// It is parametersized constructor which accepts Table Name, columnName, operator, and compare value
+        /// </summary>
+        /// <param name="tableName">It is table name from which records get deleted</param>
+        /// <param name="columnName">It is a column name on which you have to apply condition</param>
+        /// <param name="operator">It is a comparison operator</param>
+        /// <param name="compareValue">It is a value which used to compare</param>
+        public DeleteQueryBuilder(string tableName,string columnName,Comparison @operator,object compareValue)
+        {
+            Validate.TableName(tableName);
+
+            this.tableName = tableName;
+            AddWhere(columnName, @operator, compareValue);
         }
         #endregion
 
@@ -40,8 +55,8 @@ namespace QueryBuilder
                 {
                     query += " "+Constants.Where+" " + whereStatement.BuildWhereStatement();
                 }
-
-                return query;
+                query = query.Trim();
+                return Utility.RemoveMultipleSpace(query);
             }
             catch(Exception e)
             {

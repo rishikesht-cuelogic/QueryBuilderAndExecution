@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using QueryBuilder.Enums;
 
 namespace QueryBuilder
@@ -160,7 +159,7 @@ namespace QueryBuilder
         /// <param name="fromTableName">It is child table name</param>
         /// <param name="fromColumnName">It is column name of foreign key in child table</param>
         /// /// <param name="operator">It is comparison operator. Default is equality</param>
-        public void AddJoin(JoinType join, string toTableName, string toColumnName, string fromTableName, string fromColumnName, Comparison @operator=Comparison.Equals)
+        public void AddJoin(JoinType join, string toTableName, string toColumnName, string fromTableName, string fromColumnName, Comparison @operator = Comparison.Equals)
         {
             JoinClause NewJoin = new JoinClause(join, toTableName, toColumnName, @operator, fromTableName, fromColumnName);
             joins.Add(NewJoin);
@@ -172,7 +171,7 @@ namespace QueryBuilder
         /// <param name="toTableName">It Reference table name i.e. Parent table name</param>
         /// <param name="fromTableName">It is child table name</param>
         /// <param name="operator">It is comparison operator. Default is equality</param>
-        public void AddJoin(JoinType join, string toTableName, string fromTableName, Comparison @operator=Comparison.Equals)
+        public void AddJoin(JoinType join, string toTableName, string fromTableName, Comparison @operator = Comparison.Equals)
         {
             if (dbRelationship == null)
                 throw new NullReferenceException("dbRelationship is not initialize. Please use parameterized constructor of SelectQueryBuilder to initialize dbRelationship");
@@ -193,7 +192,8 @@ namespace QueryBuilder
         /// It adds where condition
         /// </summary>
         /// <param name="clause">It is object where clause</param>
-        public void AddWhere(WhereClause clause) {
+        public void AddWhere(WhereClause clause)
+        {
             AddWhere(clause, 1);
         }
         /// <summary>
@@ -212,7 +212,10 @@ namespace QueryBuilder
         /// <param name="operator">It is comparison operator</param>
         /// <param name="compareValue">It is filter value</param>
         /// <returns></returns>
-        public WhereClause AddWhere(string field, Comparison @operator, object compareValue) { return AddWhere(field, @operator, compareValue, 1); }
+        public WhereClause AddWhere(string field, Comparison @operator, object compareValue)
+        {
+            return AddWhere(field, @operator, compareValue, 1);
+        }
         /// <summary>
         /// It adds where condition
         /// </summary>
@@ -220,9 +223,11 @@ namespace QueryBuilder
         /// <param name="operator">It is comparison operator</param>
         /// <param name="compareValue">It is filter value</param>
         /// <returns></returns>
-        public WhereClause AddWhere(Enum field, Comparison @operator, object compareValue) {
+        public WhereClause AddWhere(Enum field, Comparison @operator, object compareValue)
+        {
             return AddWhere(field.ToString(), @operator, compareValue, 1);
         }
+
         /// <summary>
         /// It adds where condition
         /// </summary>
@@ -238,6 +243,32 @@ namespace QueryBuilder
             return NewWhereClause;
         }
         /// <summary>
+        /// It adds where condition
+        /// </summary>
+        /// <param name="field">It is column name which you want to filter</param>
+        /// <param name="operator">It is comparison operator</param>
+        /// <param name="selectQueryBuilder">It is used for subquery</param>
+        public WhereClause AddWhere(string field, Comparison @operator, SelectQueryBuilder selectQueryBuilderl)
+        {
+            return AddWhere(field, @operator, selectQueryBuilderl, 1);
+        }
+
+        /// <summary>
+        /// It adds where condition
+        /// </summary>
+        /// <param name="field">It is column name which you want to filter</param>
+        /// <param name="operator">It is comparison operator</param>
+        /// <param name="selectQueryBuilder">It is used for subquery</param>
+        /// <param name="level">It is level. It applies AND operation for all where clause in same level and applies OR operation for different level </param>
+        /// <returns></returns>
+        public WhereClause AddWhere(string field, Comparison @operator, SelectQueryBuilder selectQueryBuilder, int level)
+        {
+            WhereClause NewWhereClause = new WhereClause(field, @operator, selectQueryBuilder);
+            whereStatement.Add(NewWhereClause, level);
+            return NewWhereClause;
+        }
+
+        /// <summary>
         /// It is used to sort the data
         /// </summary>
         /// <param name="clause">Clause have field on which you want to sort it and sort type. i.e. Ascending or Descending. Default is Ascending sort</param>
@@ -250,13 +281,13 @@ namespace QueryBuilder
         /// </summary>
         /// <param name="field">It is a column name of type enum on which you want to sort it</param>
         /// <param name="order">It is type of sort i.e. Ascending or Descending. Default is Ascending sort</param>
-        public void AddOrderBy(Enum field, Sorting order=Sorting.Ascending) { this.AddOrderBy(field.ToString(), order); }
+        public void AddOrderBy(Enum field, Sorting order = Sorting.Ascending) { this.AddOrderBy(field.ToString(), order); }
         /// <summary>
         /// It is used to sort the data
         /// </summary>
         /// <param name="field">It is column name on which you want to sort data</param>
         /// <param name="order">It is type of sort i.e. Ascending or Descending. Default is Ascending sort</param>
-        public void AddOrderBy(string field, Sorting order=Sorting.Ascending)
+        public void AddOrderBy(string field, Sorting order = Sorting.Ascending)
         {
             OrderByClause NewOrderByClause = new OrderByClause(field, order);
             orderByStatement.Add(NewOrderByClause);
@@ -348,21 +379,21 @@ namespace QueryBuilder
             if ((topClause.Unit == TopUnit.Percent) && (topClause.Quantity > 100 || topClause.Quantity < 0))
                 throw new IndexOutOfRangeException("percentage should be less than 100 and greater than 0");
 
-            string Query = Constants.Select+" ";
+            string Query = Constants.Select + " ";
 
             // Output Distinct
             if (distinct)
             {
-                Query += Constants.Distinct+" ";
+                Query += Constants.Distinct + " ";
             }
 
             // Output Top clause; Skip If it is 100 percent;
             if (!(topClause.Quantity == 100 & topClause.Unit == TopUnit.Percent))
             {
-                Query += Constants.Top+" " + topClause.Quantity;
+                Query += Constants.Top + " " + topClause.Quantity;
                 if (topClause.Unit == TopUnit.Percent)
                 {
-                    Query += " "+Constants.Percent;
+                    Query += " " + Constants.Percent;
                 }
                 Query += " ";
             }
@@ -387,7 +418,7 @@ namespace QueryBuilder
             // Output table names
             if (selectedTables.Count > 0)
             {
-                Query += Constants.From+" ";
+                Query += Constants.From + " ";
                 foreach (string TableName in selectedTables)
                 {
                     Query += TableName + ',';
@@ -409,7 +440,7 @@ namespace QueryBuilder
                         case JoinType.LeftJoin: JoinString = Constants.LeftJoin; break;
                         case JoinType.RightJoin: JoinString = Constants.RightJoin; break;
                     }
-                    JoinString += " " + Clause.ToTable +" "+ Constants.On+" ";
+                    JoinString += " " + Clause.ToTable + " " + Constants.On + " ";
                     JoinString += WhereStatement.CreateComparisonClause(Clause.FromTable + '.' + Clause.FromColumn, Clause.ComparisonOperator, new SqlLiteral(Clause.ToTable + '.' + Clause.ToColumn));
                     Query += JoinString + ' ';
                 }
@@ -418,13 +449,13 @@ namespace QueryBuilder
             // Output where statement
             if (whereStatement.ClauseLevels > 0)
             {
-                Query += " "+Constants.Where+" " + whereStatement.BuildWhereStatement();
+                Query += " " + Constants.Where + " " + whereStatement.BuildWhereStatement();
             }
 
             // Output GroupBy statement
             if (groupByColumns.Count > 0)
             {
-                Query += " "+Constants.GroupBy+" ";
+                Query += " " + Constants.GroupBy + " ";
                 foreach (string Column in groupByColumns)
                 {
                     Query += Column + ',';
@@ -441,22 +472,22 @@ namespace QueryBuilder
                 {
                     throw new Exception("Having statement was set without Group By");
                 }
-                Query += " "+Constants.Having+" " + havingStatement.BuildWhereStatement();
+                Query += " " + Constants.Having + " " + havingStatement.BuildWhereStatement();
             }
 
             // Output OrderBy statement
             if (orderByStatement.Count > 0)
             {
-                Query += " "+Constants.OrderBy+" ";
+                Query += " " + Constants.OrderBy + " ";
                 foreach (OrderByClause Clause in orderByStatement)
                 {
                     string OrderByClause = "";
                     switch (Clause.SortOrder)
                     {
                         case Sorting.Ascending:
-                            OrderByClause = Clause.FieldName + " "+Constants.Ascending; break;
+                            OrderByClause = Clause.FieldName + " " + Constants.Ascending; break;
                         case Sorting.Descending:
-                            OrderByClause = Clause.FieldName + " "+Constants.Descending; break;
+                            OrderByClause = Clause.FieldName + " " + Constants.Descending; break;
                     }
                     Query += OrderByClause + ',';
                 }
@@ -464,7 +495,8 @@ namespace QueryBuilder
                 Query += ' ';
             }
             Query = Query.Trim();
-            return Query;
+
+            return Utility.RemoveMultipleSpace(Query);
         }
 
     }

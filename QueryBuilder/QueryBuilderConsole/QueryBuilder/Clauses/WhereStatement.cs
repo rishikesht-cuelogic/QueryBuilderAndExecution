@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using QueryBuilder.Enums;
+using System.Collections;
 
 namespace QueryBuilder
 {
@@ -166,23 +167,26 @@ namespace QueryBuilder
                 switch (comparisonOperator)
                 {
                     case Comparison.Equals:
-                        Output = fieldName + " = " + FormatSQLValue(value); break;
+                        Output = fieldName + " " + Constants.EqualTo + " " + Utility.FormatSQLValue(value); break;
                     case Comparison.NotEquals:
-                        Output = fieldName + " <> " + FormatSQLValue(value); break;
+                        Output = fieldName + " " + Constants.NotEqualTo + " " + Utility.FormatSQLValue(value); break;
                     case Comparison.GreaterThan:
-                        Output = fieldName + " > " + FormatSQLValue(value); break;
+                        Output = fieldName + " " + Constants.GreaterThan + " " + Utility.FormatSQLValue(value); break;
                     case Comparison.GreaterOrEquals:
-                        Output = fieldName + " >= " + FormatSQLValue(value); break;
+                        Output = fieldName + " " + Constants.GreaterThanEqualTo + " " + Utility.FormatSQLValue(value); break;
                     case Comparison.LessThan:
-                        Output = fieldName + " < " + FormatSQLValue(value); break;
+                        Output = fieldName + " " + Constants.LessThan + " " + Utility.FormatSQLValue(value); break;
                     case Comparison.LessOrEquals:
-                        Output = fieldName + " <= " + FormatSQLValue(value); break;
+                        Output = fieldName + " " + Constants.LessThanEqualTo + " " + Utility.FormatSQLValue(value); break;
                     case Comparison.Like:
-                        Output = fieldName + " LIKE " + FormatSQLValue(value); break;
+                        Output = fieldName + " " + Constants.Like + " " + Utility.FormatSQLValue(value); break;
                     case Comparison.NotLike:
-                        Output = "NOT " + fieldName + " LIKE " + FormatSQLValue(value); break;
+                        Output = Constants.Not+" " + fieldName + " " + Constants.Like + " " + Utility.FormatSQLValue(value); break;
                     case Comparison.In:
-                        Output = fieldName + " IN (" + FormatSQLValue(value) + ")"; break;
+                        {
+                            Output = fieldName + " " + Constants.In + Utility.FormatSQLValue(value,true); break;
+                        }
+                        
                 }
             }
             else // value==null	|| value==DBNull.Value
@@ -253,30 +257,7 @@ namespace QueryBuilder
             return Output;
         }
 
-        internal static string FormatSQLValue(object someValue)
-        {
-            string FormattedValue = "";
-            //				string StringType = Type.GetType("string").Name;
-            //				string DateTimeType = Type.GetType("DateTime").Name;
-
-            if (someValue == null)
-            {
-                FormattedValue = Constants.Null;
-            }
-            else
-            {
-                switch (someValue.GetType().Name)
-                {
-                    case "String": FormattedValue = "'" + ((string)someValue).Replace("'", "''") + "'"; break;
-                    case "DateTime": FormattedValue = "'" + ((DateTime)someValue).ToString("yyyy/MM/dd hh:mm:ss") + "'"; break;
-                    case "DBNull": FormattedValue = Constants.Null; break;
-                    case "Boolean": FormattedValue = (bool)someValue ? "1" : "0"; break;
-                    case "SqlLiteral": FormattedValue = ((SqlLiteral)someValue).Value; break;
-                    default: FormattedValue = someValue.ToString(); break;
-                }
-            }
-            return FormattedValue;
-        }
+        
 
         /// <summary>
         /// This static method combines 2 where statements with eachother to form a new statement
