@@ -18,7 +18,10 @@ namespace QueryBuilder
         protected List<OrderByClause> orderByStatement = new List<OrderByClause>();	// array of OrderByClause
         protected List<string> groupByColumns = new List<string>();		// array of string
         protected WhereStatement havingStatement = new WhereStatement();
+        protected SelectQueryBuilder existSubQuery;
+        protected string existQueryText=Constants.Exists;
         protected IdbRelationship dbRelationship;
+        protected List<AggregateFunction> aggregateFunctions = new List<AggregateFunction>();
 
         internal WhereStatement WhereStatement
         {
@@ -356,6 +359,24 @@ namespace QueryBuilder
             return NewWhereClause;
         }
         /// <summary>
+        /// It is used to add EXISTS or NOT EXISTS clause. Default is EXISTS Clause
+        /// </summary>
+        /// <param name="subQuery">It is a subquery of EXISTS or NOT EXISTS clause</param>
+        /// <param name="notExist">For NOT EXISTS Clause, Set this as true</param>
+        public void AddExist(SelectQueryBuilder subQuery, bool notExist = false)
+        {
+            existSubQuery = subQuery;
+            if (notExist)
+                existQueryText = Constants.Not + " " + existQueryText;
+        }
+
+        public void AddAggregate(Aggregate aggregate,string columnName)
+        {
+            Validate.ColumnName(columnName);
+            aggregateFunctions.Add(new AggregateFunction(aggregate, columnName));            
+        }
+
+        /// <summary>
         /// It builds the query and returns string
         /// </summary>
         /// <returns></returns>
@@ -363,6 +384,8 @@ namespace QueryBuilder
         {
             return GetQuery();
         }
+
+        
 
         /// <summary>
         /// Builds the select query
@@ -398,8 +421,13 @@ namespace QueryBuilder
                 Query += " ";
             }
 
+            if(aggregateFunctions.Count != 0)
+            {
+                Query = Query+" " + SqlUtility.GetQuery(aggregateFunctions);
+            }
+
             // Output column names
-            if (selectedColumns.Count == 0)
+            if (selectedColumns.Count == 0 && aggregateFunctions.Count==0)
             {
                 //if (selectedTables.Count == 1)
                 //    Query += selectedTables[0] + "."; // By default only select * from the table that was selected. If there are any joins, it is the responsibility of the user to select the needed columns.
@@ -410,6 +438,11 @@ namespace QueryBuilder
             {
                 foreach (string ColumnName in selectedColumns)
                 {
+                    if (aggregateFunctions.Count != 0)
+                    {
+                        Query = Query + ",";
+                    }
+
                     Query += ColumnName + ',';
                 }
                 Query = Query.TrimEnd(','); // Trim de last comma inserted by foreach loop
@@ -494,8 +527,13 @@ namespace QueryBuilder
                 Query = Query.TrimEnd(','); // Trim de last AND inserted by foreach loop
                 Query += ' ';
             }
-            Query = Query.Trim();
 
+            if (existSubQuery != null)
+            {
+                Query += Constants.Where+" "+existQueryText+" ("+existSubQuery.BuildQuery()+")";
+            }
+
+            Query = Query.Trim();
             return Utility.RemoveMultipleSpace(Query);
         }
 

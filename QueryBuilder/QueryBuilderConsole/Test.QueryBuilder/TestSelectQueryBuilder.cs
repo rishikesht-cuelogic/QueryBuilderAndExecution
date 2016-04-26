@@ -38,6 +38,7 @@ namespace Test.QueryBuilder
             Assert.AreEqual(expectedOutput, output);
         }
 
+
         [TestMethod]
         public void SelectAllColumnsFromMultipleTables()
         {
@@ -65,6 +66,43 @@ namespace Test.QueryBuilder
 
             //Assert
             var expectedOutput = "select firstname [name] from student";
+            Assert.AreEqual(expectedOutput, output);
+        }
+
+
+        [TestMethod]
+        public void SelectQueryWithExists()
+        {
+            //Assign
+            var query = new SelectQueryBuilder();
+            query.SelectFromTable("State");
+            var subQuery = new SelectQueryBuilder();
+            subQuery.SelectFromTable("City");
+            query.AddExist(subQuery);
+
+            //Act
+            var output = query.BuildQuery().ToLower();
+
+            //Assert
+            var expectedOutput = "select * from state where exists (select * from city)";
+            Assert.AreEqual(expectedOutput, output);
+        }
+
+        [TestMethod]
+        public void SelectQueryWithNotExists()
+        {
+            //Assign
+            var query = new SelectQueryBuilder();
+            query.SelectFromTable("State");
+            var subQuery = new SelectQueryBuilder();
+            subQuery.SelectFromTable("City");
+            query.AddExist(subQuery,true);
+
+            //Act
+            var output = query.BuildQuery().ToLower();
+
+            //Assert
+            var expectedOutput = "select * from state where not exists (select * from city)";
             Assert.AreEqual(expectedOutput, output);
         }
 

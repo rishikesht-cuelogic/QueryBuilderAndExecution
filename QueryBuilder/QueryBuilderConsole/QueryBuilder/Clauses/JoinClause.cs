@@ -31,4 +31,5 @@ namespace QueryBuilder
             ToColumn = toColumnName;
         }
     }
+
 }

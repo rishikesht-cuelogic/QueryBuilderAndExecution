@@ -68,7 +68,7 @@ namespace Test.QueryBuilder
         public void DeleteConditionalQueryWithDatetimeComparisonValue()
         {
             //Assign
-            var query = new DeleteQueryBuilder("Student", "createddate", Comparison.GreaterThan, DateTime.Now.Date);
+            var query = new DeleteQueryBuilder("Student", "createddate", Comparison.GreaterThan, DateTime.Parse("2016-04-25 12:00:00"));
 
             //Act
             var output = query.BuildQuery().ToLower();

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace QueryBuilder
+﻿namespace QueryBuilder
 {
     internal static class Constants
     {
@@ -43,5 +37,14 @@ namespace QueryBuilder
         public static string Values = "Values";
         public static string Update = "Update";
         public static string Set = "SET";
+        public static string Exists = "EXISTS";
+
+        #region Aggregate Functions
+        public static string Avg = "AVG";
+        public static string Count = "COUNT";
+        public static string Sum = "SUM";
+        public static string Min = "MIN";
+        public static string Max = "MAX";
+        #endregion  
     }
 }

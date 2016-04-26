@@ -51,9 +51,11 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="TestAggregateSelectQueryBuilder.cs" />
     <Compile Include="TestDeleteQueryBuilder.cs" />
     <Compile Include="TestDistinctSelectQueryBuilder.cs" />
     <Compile Include="TestInsertQueryBuilder.cs" />
+    <Compile Include="TestKantarQueries.cs" />
     <Compile Include="TestSelectQueryBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestTopClauseSelectQueryBuilder.cs" />

@@ -44,10 +44,12 @@
   <ItemGroup>
     <Compile Include="Clauses\JoinClause.cs" />
     <Compile Include="Clauses\OrderByClause.cs" />
+    <Compile Include="Clauses\AggregateFunction.cs" />
     <Compile Include="Clauses\TopClause.cs" />
     <Compile Include="Clauses\WhereClause.cs" />
     <Compile Include="Clauses\WhereStatement.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="Enum\Aggregate.cs" />
     <Compile Include="InsertQueryBuilder.cs" />
     <Compile Include="DeleteQueryBuilder.cs" />
     <Compile Include="Enum\Comparison.cs" />
@@ -63,6 +65,7 @@
     <Compile Include="SelectQueryBuilder.cs" />
     <Compile Include="SqlLiteral.cs" />
     <Compile Include="MSSQLRelationship.cs" />
+    <Compile Include="SqlUtility.cs" />
     <Compile Include="UpdateQueryBuilder.cs" />
     <Compile Include="Utility.cs" />
     <Compile Include="Validate.cs" />

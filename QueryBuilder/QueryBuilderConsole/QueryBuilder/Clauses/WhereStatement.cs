@@ -167,24 +167,24 @@ namespace QueryBuilder
                 switch (comparisonOperator)
                 {
                     case Comparison.Equals:
-                        Output = fieldName + " " + Constants.EqualTo + " " + Utility.FormatSQLValue(value); break;
+                        Output = fieldName + " " + Constants.EqualTo + " " + SqlUtility.FormatSQLValue(value); break;
                     case Comparison.NotEquals:
-                        Output = fieldName + " " + Constants.NotEqualTo + " " + Utility.FormatSQLValue(value); break;
+                        Output = fieldName + " " + Constants.NotEqualTo + " " + SqlUtility.FormatSQLValue(value); break;
                     case Comparison.GreaterThan:
-                        Output = fieldName + " " + Constants.GreaterThan + " " + Utility.FormatSQLValue(value); break;
+                        Output = fieldName + " " + Constants.GreaterThan + " " + SqlUtility.FormatSQLValue(value); break;
                     case Comparison.GreaterOrEquals:
-                        Output = fieldName + " " + Constants.GreaterThanEqualTo + " " + Utility.FormatSQLValue(value); break;
+                        Output = fieldName + " " + Constants.GreaterThanEqualTo + " " + SqlUtility.FormatSQLValue(value); break;
                     case Comparison.LessThan:
-                        Output = fieldName + " " + Constants.LessThan + " " + Utility.FormatSQLValue(value); break;
+                        Output = fieldName + " " + Constants.LessThan + " " + SqlUtility.FormatSQLValue(value); break;
                     case Comparison.LessOrEquals:
-                        Output = fieldName + " " + Constants.LessThanEqualTo + " " + Utility.FormatSQLValue(value); break;
+                        Output = fieldName + " " + Constants.LessThanEqualTo + " " + SqlUtility.FormatSQLValue(value); break;
                     case Comparison.Like:
-                        Output = fieldName + " " + Constants.Like + " " + Utility.FormatSQLValue(value); break;
+                        Output = fieldName + " " + Constants.Like + " " + SqlUtility.FormatSQLValue(value); break;
                     case Comparison.NotLike:
-                        Output = Constants.Not+" " + fieldName + " " + Constants.Like + " " + Utility.FormatSQLValue(value); break;
+                        Output = Constants.Not+" " + fieldName + " " + Constants.Like + " " + SqlUtility.FormatSQLValue(value); break;
                     case Comparison.In:
                         {
-                            Output = fieldName + " " + Constants.In + Utility.FormatSQLValue(value,true); break;
+                            Output = fieldName + " " + Constants.In + SqlUtility.FormatSQLValue(value,true); break;
                         }
                         
                 }
