@@ -2,9 +2,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace QueryBuilder
 {
@@ -25,7 +22,7 @@ namespace QueryBuilder
 
                 foreach (object item in array)
                 {
-                    if (!Utility.IsValidSqlValue(item))
+                    if (!SqlUtility.IsValidSqlValue(item))
                         throw new ArgumentException("Values must be primitive datatype");
 
                     text = text + "'" + item.ToString() + "',";
@@ -59,7 +56,6 @@ namespace QueryBuilder
             }
             return FormattedValue;
         }
-
         public static string GetAggregateFunction(Aggregate aggregate)
         {
             switch (aggregate)
@@ -84,6 +80,11 @@ namespace QueryBuilder
             }
             query = query.Trim(',');
             return query;
+        }
+        public static bool IsValidSqlValue(object value)
+        {
+            var dataType = value.GetType().Name;
+            return (Utility.IsPrimitive(value) || dataType == "String" || dataType == "DateTime");
         }
     }
 }

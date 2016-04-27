@@ -25,43 +25,19 @@ namespace Test.QueryBuilder
             Assert.AreEqual(expectedOutput, output);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void InsertQueryWithPassingObjectAsValue()
-        {
-            //Assign
-            var obj = new {FirstName="ABC",lastName="PQR" };
-            InsertQueryBuilder query = new InsertQueryBuilder("Student");
-            query.SetColumnValue("firstName", obj);
-
-            //act
-            var output = query.BuildQuery().ToLower();
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(NullReferenceException))]
-        public void InsertQueryWithPassingNullAsValue()
-        {
-            //Assign
-            InsertQueryBuilder query = new InsertQueryBuilder("Student");
-            query.SetColumnValue("firstName", null);
-
-            //act
-            var output = query.BuildQuery().ToLower();
-        }
-
+      
         [TestMethod]
         public void InsertQueryWithValuesOnly()
         {
             //Assign
-            var values = new string[] { "1", "firstname", "lastname", "email", "address", "1" };
+            var values = new object[] { 1, "firstname", "lastname", "email", "address", true };
             InsertQueryBuilder query = new InsertQueryBuilder("Student",values);
 
             //Act
             var output = query.BuildQuery().ToLower();
 
             //Assert
-            var expectedOutput = "insert into student values('1','firstname','lastname','email','address','1')";
+            var expectedOutput = "insert into student values(1,'firstname','lastname','email','address',1)";
             Assert.AreEqual(expectedOutput, output);
         }
 
@@ -72,13 +48,13 @@ namespace Test.QueryBuilder
             InsertQueryBuilder query = new InsertQueryBuilder("Student");
             SelectQueryBuilder selectQuery = new SelectQueryBuilder();
             selectQuery.SelectFromTable("Student");
-            selectQuery.SelectColumns("Id+100", "FirstName", "LastName", "Address", "Email", "IsActice");
+            selectQuery.SelectColumns("Id+100", "FirstName", "LastName", "Address", "Email", "IsActive");
             query.SetSelectQuery(selectQuery);
             //Act
             var output = query.BuildQuery().ToLower();
 
             //Assert
-            var expectedOutput = "insert into student select id+100,firstname,lastname,address,email,isactice from student";
+            var expectedOutput = "insert into student select id+100,firstname,lastname,address,email,isactive from student";
             Assert.AreEqual(expectedOutput, output);
         }
 
@@ -100,7 +76,32 @@ namespace Test.QueryBuilder
         }
 
         [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void InsertQueryWithPassingObjectAsValue()
+        {
+            //Assign
+            var obj = new { FirstName = "ABC", lastName = "PQR" };
+            InsertQueryBuilder query = new InsertQueryBuilder("Student");
+            query.SetColumnValue("firstName", obj);
+
+            //act
+            var output = query.BuildQuery().ToLower();
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(NullReferenceException))]
+        public void InsertQueryWithPassingNullAsValue()
+        {
+            //Assign
+            InsertQueryBuilder query = new InsertQueryBuilder("Student");
+            query.SetColumnValue("firstName", null);
+
+            //act
+            var output = query.BuildQuery().ToLower();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
         public void InsertQueryWithTableNameNull()
         {
             InsertQueryBuilder query = new InsertQueryBuilder(null);
@@ -108,7 +109,7 @@ namespace Test.QueryBuilder
         }
 
         [TestMethod]
-        [ExpectedException(typeof(NullReferenceException))]
+        [ExpectedException(typeof(ArgumentException))]
         public void InsertQueryWithTableNameEmpty()
         {
             InsertQueryBuilder query = new InsertQueryBuilder("      ");

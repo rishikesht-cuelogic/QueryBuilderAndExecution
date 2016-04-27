@@ -6,7 +6,7 @@ namespace QueryBuilder.Enums
     public enum JoinType
     {
         InnerJoin,
-        OuterJoin,
+        FullJoin,
         LeftJoin,
         RightJoin,
         CrossJoin

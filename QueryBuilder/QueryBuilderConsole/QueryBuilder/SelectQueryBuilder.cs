@@ -22,6 +22,7 @@ namespace QueryBuilder
         protected string existQueryText=Constants.Exists;
         protected IdbRelationship dbRelationship;
         protected List<AggregateFunction> aggregateFunctions = new List<AggregateFunction>();
+        protected List<string> crossJoinTables = new List<string>();
 
         internal WhereStatement WhereStatement
         {
@@ -67,6 +68,12 @@ namespace QueryBuilder
         {
             get { return topClause; }
             set { topClause = value; }
+        }
+
+        public void AddCrossJoin(string toTableName)
+        {
+            Validate.TableName(toTableName);
+            crossJoinTables.Add(toTableName);
         }
 
         /// <summary>
@@ -469,7 +476,7 @@ namespace QueryBuilder
                     switch (Clause.JoinType)
                     {
                         case JoinType.InnerJoin: JoinString = Constants.InnerJoin; break;
-                        case JoinType.OuterJoin: JoinString = Constants.OuterJoin; break;
+                        case JoinType.FullJoin: JoinString = Constants.FullJoin; break;
                         case JoinType.LeftJoin: JoinString = Constants.LeftJoin; break;
                         case JoinType.RightJoin: JoinString = Constants.RightJoin; break;
                     }
@@ -477,6 +484,15 @@ namespace QueryBuilder
                     JoinString += WhereStatement.CreateComparisonClause(Clause.FromTable + '.' + Clause.FromColumn, Clause.ComparisonOperator, new SqlLiteral(Clause.ToTable + '.' + Clause.ToColumn));
                     Query += JoinString + ' ';
                 }
+            }
+
+            //Cross Join
+            if (crossJoinTables.Count > 0)
+            {
+                foreach(var item in crossJoinTables)
+                {
+                    Query = Query + Constants.CrossJoin +" "+ item +" ";
+                }                
             }
 
             // Output where statement

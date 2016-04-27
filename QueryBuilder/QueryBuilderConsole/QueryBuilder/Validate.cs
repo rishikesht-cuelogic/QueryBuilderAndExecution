@@ -38,7 +38,7 @@ namespace QueryBuilder
 
         public static bool SqlValue(object value)
         {
-            if (!Utility.IsValidSqlValue(value))
+            if (!SqlUtility.IsValidSqlValue(value))
                 throw new ArgumentException("Invalid value");
 
             return true;

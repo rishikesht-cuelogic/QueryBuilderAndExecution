@@ -55,7 +55,8 @@
     <Compile Include="TestDeleteQueryBuilder.cs" />
     <Compile Include="TestDistinctSelectQueryBuilder.cs" />
     <Compile Include="TestInsertQueryBuilder.cs" />
-    <Compile Include="TestKantarQueries.cs" />
+    <Compile Include="TestCombinedQueries.cs" />
+    <Compile Include="TestJoinSelectQueryBuilder.cs" />
     <Compile Include="TestSelectQueryBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestTopClauseSelectQueryBuilder.cs" />

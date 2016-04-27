@@ -13,7 +13,7 @@ namespace QueryBuilder
     public class UpdateQueryBuilder : QueryBuilder
     {
         #region Properties and fields        
-        protected Dictionary<string, string> columnValues;
+        protected Dictionary<string, object> columnValues;
         #endregion
 
         #region C'tor
@@ -23,7 +23,8 @@ namespace QueryBuilder
         //}
         public UpdateQueryBuilder(string tableName)
         {
-            columnValues = new Dictionary<string, string>();
+            Validate.TableName(tableName);
+            columnValues = new Dictionary<string, object>();
             this.tableName = tableName;
         }
         #endregion
@@ -34,7 +35,7 @@ namespace QueryBuilder
             var text = "";
             foreach (var item in columnValues)
             {
-                text = text + item.Key + " = '" + item.Value + "',";
+                text = text + item.Key + " = " + SqlUtility.FormatSQLValue(item.Value)+ ",";
             }
             text = text.TrimEnd(',');
             return text;
@@ -52,8 +53,13 @@ namespace QueryBuilder
             try
             {
                 var query = Constants.Update+" " + tableName + " "+Constants.Set+" ";
-                query = query + GetSettersInString() + " "+Constants.Where+" ";
-                query = query + whereStatement.BuildWhereStatement();
+                query = query + GetSettersInString();
+                if (whereStatement!=null && whereStatement.Count != 0)
+                {
+                    query = query + " " + Constants.Where + " ";
+                    query = query + whereStatement.BuildWhereStatement();
+                }
+                query = query.Trim();
                 return Utility.RemoveMultipleSpace(query);
             }
             catch(Exception e)
@@ -70,7 +76,20 @@ namespace QueryBuilder
         /// <param name="value">It is value which will be assigned</param>
         public void SetColumnValue(string columnName, object value)
         {
-            columnValues.Add(columnName, value.ToString());
+            try
+            {
+                if (value == null)
+                    throw new NullReferenceException("value should not be null");
+
+                if (!SqlUtility.IsValidSqlValue(value))
+                    throw new ArgumentException("value should be primitive datatype");
+
+                columnValues.Add(columnName, value);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         #endregion

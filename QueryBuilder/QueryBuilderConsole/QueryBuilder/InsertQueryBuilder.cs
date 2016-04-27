@@ -14,8 +14,8 @@ namespace QueryBuilder
     {
         #region Properties
         protected string tableName { get; set; }
-        protected Dictionary<string, string> columnValues;
-        protected List<string> listValues { get; set; }
+        protected Dictionary<string, object> columnValues;
+        protected List<object> listValues { get; set; }
         protected List<string> selectedColumns = new List<string>();
         protected SelectQueryBuilder selectQueryBuilder { get; set; }
         #endregion
@@ -23,7 +23,8 @@ namespace QueryBuilder
         #region C'tor
         public InsertQueryBuilder(string tableName)
         {
-            columnValues = new Dictionary<string, string>();
+            Validate.TableName(tableName);
+            columnValues = new Dictionary<string, object>();
             this.tableName = tableName;
         }
         /// <summary>
@@ -31,14 +32,14 @@ namespace QueryBuilder
         /// </summary>
         /// <param name="tableName"></param>
         /// <param name="values"></param>
-        public InsertQueryBuilder(string tableName,params string[] values)
+        public InsertQueryBuilder(string tableName,params object[] values)
         {
-            listValues = new List<string>();
+            listValues = new List<object>();
             foreach (var item in values)
             {
                 listValues.Add(item);
             }
-            columnValues = new Dictionary<string, string>();
+            columnValues = new Dictionary<string, object>();
             this.tableName = tableName;
         }
         #endregion
@@ -70,10 +71,10 @@ namespace QueryBuilder
                 if (value == null)
                     throw new NullReferenceException("value should not be null");
 
-                if (!Utility.IsPrimitive(value) && value.GetType().Name!="String")
+                if (!SqlUtility.IsValidSqlValue(value))
                     throw new ArgumentException("value should be primitive datatype");
 
-                columnValues.Add(columnName, value.ToString());
+                columnValues.Add(columnName, value);
             }
             catch(Exception e)
             {
@@ -89,9 +90,6 @@ namespace QueryBuilder
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(tableName))
-                    throw new NullReferenceException("tableName should not be null or empty");
-
                 var query = Constants.Insert+" "+Constants.Into+" " + tableName + "";
                 if (listValues != null && listValues.Count > 0)
                 {
