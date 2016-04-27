@@ -171,7 +171,7 @@ namespace QueryBuilder
         /// /// <param name="operator">It is comparison operator. Default is equality</param>
         public void AddJoin(JoinType join, string toTableName, string toColumnName, string fromTableName, string fromColumnName, Comparison @operator = Comparison.Equals)
         {
-            JoinClause NewJoin = new JoinClause(join, toTableName, toColumnName, @operator, fromTableName, fromColumnName);
+            JoinClause NewJoin = new JoinClause(join, toTableName, toColumnName,fromTableName, fromColumnName, @operator);
             joins.Add(NewJoin);
         }
         /// <summary>
@@ -187,7 +187,7 @@ namespace QueryBuilder
                 throw new NullReferenceException("dbRelationship is not initialize. Please use parameterized constructor of SelectQueryBuilder to initialize dbRelationship");
 
             var relation = dbRelationship.GetRelationInfo(fromTableName, toTableName);
-            JoinClause NewJoin = new JoinClause(join, toTableName, relation.ToColumnName, @operator, fromTableName, relation.FromColumnName);
+            JoinClause NewJoin = new JoinClause(join, toTableName, relation.ToColumnName, fromTableName, relation.FromColumnName, @operator);
             joins.Add(NewJoin);
         }
         /// <summary>

@@ -37,7 +37,7 @@ namespace QueryBuilderConsole
 
             //query.AddJoin(JoinType.InnerJoin, "Country", "Id", Comparison.Equals, "State", "CountryId");
             query.AddJoin(JoinType.InnerJoin, "Country", "State");
-            query.AddJoin(new JoinClause(JoinType.InnerJoin, "Country", "CountryId", Comparison.Equals, "State", "StateId"));
+            query.AddJoin(new JoinClause(JoinType.InnerJoin, "Country", "CountryId", "State", "StateId", Comparison.Equals));
 
             // Select specific columns
             query.SelectColumns("City.CityName", "state.StateName", "Country.CountryName");

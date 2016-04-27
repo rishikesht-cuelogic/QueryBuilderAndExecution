@@ -17,12 +17,17 @@ namespace QueryBuilder
         public JoinClause(
             JoinType join, 
             string toTableName, 
-            string toColumnName,
-            Comparison @operator,
+            string toColumnName,           
             string fromTableName, 
-            string fromColumnName
+            string fromColumnName,
+             Comparison @operator=Comparison.Equals
             )
         {
+            Validate.TableName(toTableName);
+            Validate.TableName(fromTableName);
+            Validate.ColumnName(toColumnName);
+            Validate.ColumnName(fromColumnName);
+
             JoinType = join;
             FromTable = fromTableName;
             FromColumn = fromColumnName;
