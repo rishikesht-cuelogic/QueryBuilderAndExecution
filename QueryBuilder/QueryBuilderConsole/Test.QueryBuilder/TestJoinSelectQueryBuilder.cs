@@ -72,6 +72,76 @@ namespace Test.QueryBuilder
             Assert.AreEqual(expectedOutput, output);
         }
 
+
+        [TestMethod]
+        public void InnerJoinOnTwoTablesByAutoDetection()
+        {
+            //Assign
+            var sql = new MSSQLRelationship("test-pc", "kantarPractice", "sa", "pa$$word");
+            var query = new SelectQueryBuilder(sql);
+            query.SelectFromTable("City");
+            query.AddJoin(JoinType.InnerJoin, "State", "City");
+
+            //Act
+            var output = query.BuildQuery().ToLower();
+
+            //Assert
+            var expectedOutput = "select * from city inner join state on city.stateid = state.id";
+            Assert.AreEqual(expectedOutput, output);
+        }
+
+        [TestMethod]
+        public void LeftJoinOnTwoTablesByAutoDetection()
+        {
+            //Assign
+            var sql = new MSSQLRelationship("test-pc", "kantarPractice", "sa", "pa$$word");
+            var query = new SelectQueryBuilder(sql);
+            query.SelectFromTable("City");
+            query.AddJoin(JoinType.LeftJoin, "State", "City");
+
+            //Act
+            var output = query.BuildQuery().ToLower();
+
+            //Assert
+            var expectedOutput = "select * from city left join state on city.stateid = state.id";
+            Assert.AreEqual(expectedOutput, output);
+        }
+
+        [TestMethod]
+        public void RightJoinOnTwoTablesByAutoDetection()
+        {
+            //Assign
+            var sql = new MSSQLRelationship("test-pc", "kantarPractice", "sa", "pa$$word");
+            var query = new SelectQueryBuilder(sql);
+            query.SelectFromTable("City");
+            query.AddJoin(JoinType.RightJoin, "State", "City");
+
+            //Act
+            var output = query.BuildQuery().ToLower();
+
+            //Assert
+            var expectedOutput = "select * from city right join state on city.stateid = state.id";
+            Assert.AreEqual(expectedOutput, output);
+        }
+
+        [TestMethod]
+        public void FullJoinOnTwoTablesByAutoDetection()
+        {
+            //Assign
+            var sql = new MSSQLRelationship("test-pc", "kantarPractice", "sa", "pa$$word");
+            var query = new SelectQueryBuilder(sql);
+            query.SelectFromTable("City");
+            query.AddJoin(JoinType.FullJoin, "State", "Id", "City", "StateId");
+
+            //Act
+            var output = query.BuildQuery().ToLower();
+
+            //Assert
+            var expectedOutput = "select * from city full join state on city.stateid = state.id";
+            Assert.AreEqual(expectedOutput, output);
+        }
+
+
         [TestMethod]
         public void InnerJoinOnTwoTablesByJoinClauseObject()
         {
@@ -382,6 +452,23 @@ namespace Test.QueryBuilder
             query.SelectFromTable("City");
             query.AddJoin(JoinType.InnerJoin, "State", "Id", "City", null);
         }
+        //[TestMethod]
+        //[ExpectedException(typeof(Exception))]
+        //public void InnerJoinOnTwoTablesByAutoDetectionWithWrongServerName()
+        //{
+        //    //Assign
+        //    var sql = new MSSQLRelationship("abc", "kantarPractice", "sa", "pa$$word");
+        //    var query = new SelectQueryBuilder(sql);
+        //    query.SelectFromTable("City");
+        //    query.AddJoin(JoinType.InnerJoin, "State", "City");
+
+        //    //Act
+        //    var output = query.BuildQuery().ToLower();
+
+        //    //Assert
+        //    var expectedOutput = "select * from city inner join state on city.stateid = state.id";
+        //    Assert.AreEqual(expectedOutput, output);
+        //}
         #endregion
     }
 }

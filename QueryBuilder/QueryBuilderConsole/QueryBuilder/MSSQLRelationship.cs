@@ -42,12 +42,20 @@ namespace QueryBuilder
         /// <param name="databaseName">This is database name which needs to connect you</param>
         public MSSQLRelationship(string serverName, string databaseName, string userName, string password)
         {
-            server = new Server(serverName);//@"TEST-PC"
-            server.ConnectionContext.LoginSecure = false;
-            server.ConnectionContext.Login = userName;//"sa";
-            server.ConnectionContext.Password = password;//"pa$$word";
-            Database db = server.Databases[databaseName];//"kantarPractice"
-            relation = new Relation();
+            try
+            {
+                server = new Server(serverName);//@"TEST-PC"
+                server.ConnectionContext.LoginSecure = false;
+                server.ConnectionContext.Login = userName;//"sa";
+                server.ConnectionContext.Password = password;//"pa$$word";
+                db = server.Databases[databaseName];//"kantarPractice"
+                relation = new Relation();
+            }
+            catch(Exception e)
+            {
+                throw e;
+            }
+            
         }
         #endregion
 

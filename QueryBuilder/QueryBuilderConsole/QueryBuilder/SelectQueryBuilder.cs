@@ -18,10 +18,12 @@ namespace QueryBuilder
         protected List<OrderByClause> orderByStatement = new List<OrderByClause>();	// array of OrderByClause
         protected List<string> groupByColumns = new List<string>();		// array of string
         protected WhereStatement havingStatement = new WhereStatement();
+
         protected SelectQueryBuilder existSubQuery;
         protected string existQueryText=Constants.Exists;
         protected IdbRelationship dbRelationship;
         protected List<AggregateFunction> aggregateFunctions = new List<AggregateFunction>();
+        protected List<UnionClause> unionClauses = new List<UnionClause>();
         protected List<string> crossJoinTables = new List<string>();
 
         internal WhereStatement WhereStatement
@@ -376,11 +378,26 @@ namespace QueryBuilder
             if (notExist)
                 existQueryText = Constants.Not + " " + existQueryText;
         }
-
+        /// <summary>
+        /// It adds aggreagate function in the query
+        /// </summary>
+        /// <param name="aggregate">It is Aggregate enums e.g. Min,Max,Count,Sum,Avg</param>
+        /// <param name="columnName">It is a column name on which aggregate function will be applied</param>
         public void AddAggregate(Aggregate aggregate,string columnName)
         {
             Validate.ColumnName(columnName);
             aggregateFunctions.Add(new AggregateFunction(aggregate, columnName));            
+        }
+        /// <summary>
+        /// It add UNION or UNION ALL clause in the query
+        /// </summary>
+        /// <param name="union">It is a Union enums e.g. UNION, UNION ALL</param>
+        /// <param name="selectQueryBuilder">It is a SelectQueryBuilder object on which UINON or UNION aLL will be applied</param>
+        public void AddUnion(Union union, SelectQueryBuilder selectQueryBuilder)
+        {
+            if (selectQueryBuilder == null)
+                throw new ArgumentNullException("SelectQueryBuilder should not be null");
+            unionClauses.Add(new UnionClause(union, selectQueryBuilder));
         }
 
         /// <summary>
@@ -522,6 +539,11 @@ namespace QueryBuilder
                     throw new Exception("Having statement was set without Group By");
                 }
                 Query += " " + Constants.Having + " " + havingStatement.BuildWhereStatement();
+            }
+
+            // UNION or UNION ALL
+            if (unionClauses.Count > 0) {
+                Query += SqlUtility.GetQuery(unionClauses);
             }
 
             // Output OrderBy statement

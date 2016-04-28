@@ -78,5 +78,10 @@
         public static string GroupBy = "GROUP BY";
         public static string Having = "HAVING";
         #endregion
+
+        #region Union
+        public static string Union = "UNION";
+        public static string All = "ALL";
+        #endregion
     }
 }

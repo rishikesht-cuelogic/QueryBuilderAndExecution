@@ -68,6 +68,15 @@ namespace QueryBuilder
             }
             return string.Empty;
         }
+        public static string GetUnion(Union union)
+        {
+            switch (union)
+            {
+                case Union.Union: return Constants.Union;
+                case Union.UnionAll: return Constants.Union+" "+Constants.All;
+            }
+            return string.Empty;
+        }
         public static string GetQuery(List<AggregateFunction> aggregateFunctions)
         {
             if (aggregateFunctions == null)
@@ -79,6 +88,19 @@ namespace QueryBuilder
                 query = query + item.CreateAggreateFunction()+",";              
             }
             query = query.Trim(',');
+            return query;
+        }
+        public static string GetQuery(List<UnionClause> unions)
+        {
+            if (unions == null)
+                return string.Empty;
+
+            var query = string.Empty;
+            foreach (var item in unions)
+            {
+                query = query + item.CreateUnionClause() + " ";
+            }
+            query = query.Trim(' ');
             return query;
         }
         public static bool IsValidSqlValue(object value)

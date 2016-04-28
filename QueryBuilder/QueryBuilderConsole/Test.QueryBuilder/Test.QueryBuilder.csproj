@@ -60,6 +60,7 @@
     <Compile Include="TestSelectQueryBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestTopClauseSelectQueryBuilder.cs" />
+    <Compile Include="TestUnionSelectQueryBuilder.cs" />
     <Compile Include="TestUpdateQueryBuilder.cs" />
     <Compile Include="TestWhereClauseSelectQueryBuilder.cs" />
   </ItemGroup>

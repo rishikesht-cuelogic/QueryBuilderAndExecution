@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Clauses\UnionClause.cs" />
     <Compile Include="Clauses\JoinClause.cs" />
     <Compile Include="Clauses\OrderByClause.cs" />
     <Compile Include="Clauses\AggregateFunction.cs" />
@@ -49,6 +50,7 @@
     <Compile Include="Clauses\WhereClause.cs" />
     <Compile Include="Clauses\WhereStatement.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="Enum\Union.cs" />
     <Compile Include="Enum\Aggregate.cs" />
     <Compile Include="InsertQueryBuilder.cs" />
     <Compile Include="DeleteQueryBuilder.cs" />
